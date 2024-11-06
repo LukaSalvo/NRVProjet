@@ -4,8 +4,6 @@
 namespace iutnc\nrv\dispatch;
 
 
-use iutnc\nrv\action\DefaultAction;
-
 class Dispatcher{
 
 

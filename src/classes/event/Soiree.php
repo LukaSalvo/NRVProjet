@@ -9,5 +9,4 @@ class Soiree{
     protected int $id;
     protected int $nom;
 
-    protected
 }
