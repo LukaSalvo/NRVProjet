@@ -1,6 +1,6 @@
 <?php
 
-
+namespace iutnc\nrv\action;
 abstract class Action {
 
     protected ?string $http_method = null;
