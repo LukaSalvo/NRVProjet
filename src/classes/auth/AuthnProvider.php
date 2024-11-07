@@ -29,11 +29,11 @@ class AuthnProvider {
                 throw new AuthnException("Aucun compte trouvé pour cet email.");
             }
 
-            if (!password_verify($password, $user['mdp'])) {
+            if (!password_verify($password, $user['password'])) {
                 throw new AuthnException("Mot de passe incorrect.");
             }
 
-            $userType = new User($user['id_user'], $user['adresseMailUtilisateur'], $user['nomUtilisateur'], $user['mdp'], $user['role']);
+            $userType = new User($user['id_user'], $user['email'], $user['nom_user'], $user['password'], $user['role']);
             $_SESSION['user'] = serialize($userType);
 
             return $user['id_user'];
@@ -48,7 +48,7 @@ class AuthnProvider {
         $pdo = NRVRepository::getInstance();
 
         // Vérifie si un utilisateur existe déjà avec cet email
-        $stmt = $pdo->getPDO()->prepare("SELECT * FROM user WHERE adresseMailUtilisateur = ?");
+        $stmt = $pdo->getPDO()->prepare("SELECT * FROM user WHERE email = ?");
         $stmt->execute([$email]);
         if ($stmt->fetch()) {
             throw new AuthnException("Un utilisateur avec cet email existe déjà.");
@@ -57,7 +57,7 @@ class AuthnProvider {
         // Vérifie la sécurité du mot de passe
         if (self::checkPasswordStrength($mdp, $taille_mini)) {
             $hashedMdp = password_hash($mdp, PASSWORD_DEFAULT);
-            $stmt = $pdo->getPDO()->prepare("INSERT INTO user(adresseMailUtilisateur, mdp) VALUES(?, ?);");
+            $stmt = $pdo->getPDO()->prepare("INSERT INTO user(email, password) VALUES(?, ?);");
             $stmt->execute([$email, $hashedMdp]);
         } else {
             throw new AuthnException("Le mot de passe n'est pas assez sécurisé.");
