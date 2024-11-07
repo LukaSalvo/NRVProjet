@@ -1,37 +1,32 @@
 <?php
 
-
 namespace iutnc\nrv\dispatch;
 
-use iutnc\nrv\action\DefaultAction;
 use iutnc\nrv\action\AddSoireeAction;
+use iutnc\nrv\action\DefaultAction;
 
-class Dispatcher{
-
+class Dispatcher {
 
     private string $action;
-
 
     public function __construct() {
         $this->action = $_GET['action'] ?? 'default';
     }
 
-    public function run(): void
-    {
-
+    public function run(): void {
         switch ($this->action) {
-            case 'default':
-                $action = DefaultAction();
-                break;
             case 'addSoiree':
-                $action = AddSoireeAction();
+                $action = new AddSoireeAction();
+                break;
+            default:
+                $action = new DefaultAction();
                 break;
         }
         $res = $action->execute();
         $this->renderPage($res);
     }
 
-    public function renderPage(array $res): void{
+    public function renderPage(string $res): void {
         $output = '
             <html>
             <head>

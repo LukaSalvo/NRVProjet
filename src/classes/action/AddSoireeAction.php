@@ -14,16 +14,16 @@ class AddSoireeAction extends Action {
         }
     }
 
-    private function checkPermissions(): bool {
+    //private function checkPermissions(): bool {
         // Supposons que vous avez une classe Authz pour gérer les autorisations
         // et une méthode hasRole qui vérifie si l'utilisateur a un rôle spécifique
-        return Authz::hasRole($_SESSION['user_id'], 100);
-    }
+        //return Authz::hasRole($_SESSION['user_id'], 100);
+    // }
 
     private function displayForm(): string {
-        if(!$this->checkPermissions()){
-            return 'Vous n\'avez pas les permissions nécessaires pour accéder à cette page';
-        }
+        //if(!$this->checkPermissions()){
+            //return 'Vous n\'avez pas les permissions nécessaires pour accéder à cette page';
+        //}
         return '
         <!DOCTYPE html>
         <html lang="fr">

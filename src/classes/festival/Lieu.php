@@ -18,7 +18,6 @@ class Lieu  {
 
 
     public function __construct(int $nb_place, string $nom_emplacement , string $nom_lieu) {
-        $this->id_lieu = $id_lieu;
         $this->nb_place = $nb_place;
         $this->nom_emplacement = $nom_emplacement;
         $this->nom_lieu = $nom_lieu;
