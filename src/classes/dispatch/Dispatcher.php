@@ -30,7 +30,7 @@ class Dispatcher{
         $output = '
             <html>
             <head>
-                <title>Deefy App</title>
+                <title>NRV</title>
             </head>
             <body>
                 <nav>
