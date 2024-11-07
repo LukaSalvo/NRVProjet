@@ -30,9 +30,7 @@ class Dispatcher {
                 break;
             case 'logout':
                 $action = new LogoutAction();
-
                 break;
-
             case 'displaySoiree':
                 $action = new DisplaySoireeAction();
                 break;
@@ -48,20 +46,43 @@ class Dispatcher {
     }
 
     public function renderPage(string $res): void {
-        $output = '
+        {
+            $user = null;
+
+            if (isset($_SESSION['user'])) {
+                try {
+                    $user = unserialize($_SESSION['user']);
+                } catch (Exception $e) {
+                }
+            }
+
+            $output = '
             <html>
             <head>
-                <title>NRV</title>
+                <title>Deefy App</title>
+                <link rel="stylesheet" href="src/style/style.css"> 
             </head>
             <body>
                 <nav>
-                    <a href="?action=default">Accueil</a>';
-        $output .= '
+                    <a href="?action=default">Accueil</a>
+                    <a href="?action=soiree">Soiree</a>';
+
+            if ($user !== null) {
+                $output .= '<a href =?action=logout>Se Deconnecter</a>
+                           <a href =?action=playlist>Mon espace</a>';
+            } else {
+                $output .= '
+             <a href = "?action=login">Connexion</a>
+             <a href="?action=register">Inscription</a>
+          
+            ';
+            }
+            $output .= '
                 </nav>
-                <main>'.$res.'</main>
+                <main>' . $res . '</main>
             </body>
             </html>';
 
-        echo $output;
-    }
+            echo $output;
+        }
 }
