@@ -73,11 +73,10 @@ class Dispatcher {
             <body>
                 <nav>
                     <a href="?action=default">Accueil</a>
-                    <a href="?action=soiree">Soiree</a>';
+                    <a href="?action=addSoiree">Soiree</a>';
 
             if ($user !== null) {
-                $output .= '<a href =?action=logout>Se Deconnecter</a>
-                           <a href =?action=playlist>Mon espace</a>';
+                $output .= '<a href =?action=logout>Se Deconnecter</a>';
             } else {
                 $output .= '
              <a href = "?action=login">Connexion</a>
