@@ -78,8 +78,8 @@ class AddSoireeAction extends Action {
         // Récupération de l'ID du lieu inséré
         $id_lieu = $pdo->lastInsertId();
 
-        $inser2 = $pdo->prepare("INSERT INTO soiree (id_lieu, date) VALUES (:id_lieu, :date)");
-        $inser2->execute(['id_lieu' => $id_lieu, 'date' => $date]);
+        $inser2 = $pdo->prepare("INSERT INTO soiree (nom_soiree,id_lieu, date) VALUES (:nom_soiree, :id_lieu, :date)");
+        $inser2->execute(['nom_soiree' => $nom,'id_lieu' => $id_lieu, 'date' => $date]);
         
         
         return 'Soirée ajoutée avec succès';
