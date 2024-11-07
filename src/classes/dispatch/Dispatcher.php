@@ -45,7 +45,8 @@ class Dispatcher {
         $this->renderPage($res);
     }
 
-    public function renderPage(string $res): void {
+    public function renderPage(string $res): void
+    {
         {
             $user = null;
 
@@ -85,4 +86,5 @@ class Dispatcher {
 
             echo $output;
         }
+    }
 }
