@@ -27,10 +27,16 @@ class Authz {
      * @throws AuthnException
      */
     public static function isAdmin(): bool {
-        if (!isset($_SESSION['user'])) {
-            throw new AuthnException("Aucun utilisateur n'est authentifié.");
-        }
+        $repo = NRVRepository::getInstance();
 
-        return $_SESSION['user']['role'] === 'admin';
+        try {
+            $role = $repo->getUserRoleById($userId);
+            if ($role === null) {
+                throw new AuthnException("Utilisateur non trouvé.");
+            }
+            return $role === '100';
+        } catch (PDOException $e) {
+            throw new AuthnException("Erreur de base de données : " . $e->getMessage());
+        }
     }
 }

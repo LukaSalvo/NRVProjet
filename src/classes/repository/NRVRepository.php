@@ -62,5 +62,12 @@ class NRVRepository{
             'role' => $role
         ]);
     }
+
+    public function getUserRoleById(int $id): ?string {
+        $stmt = $this->pdo->prepare("SELECT role FROM user WHERE id_user = :id");
+        $stmt->execute(['id' => $id]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result ? $result['role'] : null;
+    }
     
 }

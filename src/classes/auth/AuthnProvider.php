@@ -23,23 +23,26 @@ class AuthnProvider {
      * @param string $password
      * @throws AuthnException
      */
-    public static function signin(string $email, string $password): void {
+    public static function signin(string $email, string $password): int {
         $repo = NRVRepository::getInstance();
         try {
-            $stmt = $repo->getPdo()->prepare("SELECT * FROM user WHERE adresseMailUtilisateur = :email");
-            $stmt->execute(['email' => $email]);
-            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+            $user = $repo->getUserByEmail($email);
 
-            if (!$user || !password_verify($password, $user['mdp'])) {
-                throw new AuthnException("Email ou mot de passe incorrect.");
+            if (!$user) {
+                throw new AuthnException("Aucun compte trouvé pour cet email.");
+            }
+
+            if (!password_verify($password, $user['mdp'])) {
+                throw new AuthnException("Mot de passe incorrect.");
             }
 
             $_SESSION['user'] = [
                 'id_user' => $user['id_user'],
-                'adresseMailUtilisateur' => $user['adresseMailUtilisateur'],
-                'nomUtilisateur' => $user['nomUtilisateur'],
-                'role' => $user['role']
+                'role' => $user['role'],
+                'nomUtilisateur' => $user['nomUtilisateur']
             ];
+    
+            return $user['id_user'];  
         } catch (PDOException $e) {
             throw new AuthnException("Erreur de base de données : " . $e->getMessage());
         }
