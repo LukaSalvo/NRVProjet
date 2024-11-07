@@ -105,22 +105,6 @@ INSERT INTO artiste (id_artiste , nom_artiste) VALUES
 
 
 
-INSERT INTO spectacle (id_spectacle, nomSpec, style, duree , id_soiree) VALUES
-                                                                            (1, 'Rock Vibes', 'Rock', 90, 1),
-                                                                            (2, 'Hardcore Thunder', 'Hard Rock', 105, 1),
-                                                                            (3, 'Techno Pulse', 'Techno', 100, 2),
-                                                                            (4, 'Acid Flow', 'Acid', 95, 2),
-                                                                            (5, 'Electric Night', 'Electronic', 85, 3),
-                                                                            (6, 'Metal Scream', 'Metal', 110, 3),
-                                                                            (7, 'Blue Fusion', 'Blues', 90, 4),
-                                                                            (8, 'Synthwave Dreams', 'Synthwave', 80, 4),
-                                                                            (9, 'Groove Jam', 'Funk', 75, 5),
-                                                                            (10, 'Dark Soundscapes', 'Darkwave', 90, 5),
-                                                                            (11, 'Hypnotic Journey', 'Trance', 95, 6),
-                                                                            (12, 'Neon Nights', 'Electro', 85, 6),
-                                                                            (13, 'Night Bassline', 'House', 90, 7),
-                                                                            (14, 'Pulse Driver', 'Drum and Bass', 105, 7);
-
 
 INSERT INTO `soiree` (id_soiree , nom_soiree,id_lieu, date) VALUES
                                     (1, 'Rock Fest', 1, '2024-06-01'),
