@@ -27,7 +27,7 @@ CREATE TABLE `user` (
 	`nom_user` VARCHAR(200),
 	`email` VARCHAR(256) NOT NULL,
 	`password` VARCHAR(256) NOT NULL,
-	`role` INT NOT NULL,
+	`role` INT NOT NULL DEFAULT 1,
 	PRIMARY KEY(`id_user`)
 );
 
