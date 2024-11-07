@@ -70,5 +70,33 @@ class NRVRepository{
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         return $result ? $result['role'] : null;
     }
+
+    public function getAllSoirees(): array {
+        $stmt = $this->pdo->query("SELECT soiree.id_soiree, lieu.nom_lieu, soiree.date FROM soiree JOIN lieu ON soiree.id_lieu = lieu.id_lieu");
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
     
+    public function getSoireeById(int $id): ?array {
+        $stmt = $this->pdo->prepare("SELECT soiree.id_soiree, lieu.nom_lieu, soiree.date FROM soiree JOIN lieu ON soiree.id_lieu = lieu.id_lieu WHERE soiree.id_soiree = :id");
+        $stmt->execute(['id' => $id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
+    }
+    
+    public function findSpectaclesBySoireeId(int $soireeId): array {
+        $stmt = $this->pdo->prepare("SELECT spectacle.nomSpec, spectacle.style, spectacle.durée FROM soiree2spectacle 
+                                     JOIN spectacle ON soiree2spectacle.id_spectacle = spectacle.id_spectacle 
+                                     WHERE soiree2spectacle.id_soiree = :soireeId");
+        $stmt->execute(['soireeId' => $soireeId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getAllSpectacles(): array {
+        $stmt = $this->pdo->query("SELECT id_spectacle, nomSpec, style, durée FROM spectacle");
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
+    public function addSpectacleToSoiree(int $spectacleId, int $soireeId): bool {
+        $stmt = $this->pdo->prepare("INSERT INTO soiree2spectacle (id_soiree, id_spectacle) VALUES (:soireeId, :spectacleId)");
+        return $stmt->execute(['soireeId' => $soireeId, 'spectacleId' => $spectacleId]);
+    }  
 }

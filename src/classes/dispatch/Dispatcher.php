@@ -3,6 +3,11 @@
 namespace iutnc\nrv\dispatch;
 
 use iutnc\nrv\action\AddSoireeAction;
+use iutnc\nrv\action\AddSpectacleAction;
+use iutnc\nrv\action\DisplaySoireeAction;
+use iutnc\nrv\action\LogInAction;
+use iutnc\nrv\action\LogOutAction;
+use iutnc\nrv\action\RegisterAction;
 use iutnc\nrv\action\DefaultAction;
 
 class Dispatcher {
@@ -24,6 +29,10 @@ class Dispatcher {
                 $action = new RegisterAction();
             case 'logout':
                 $action = new LogoutAction();
+            case 'displaySoiree':
+                $action = new DisplaySoireeAction();
+            case 'addSpectacle':
+                $action = new AddSpectacleActiob();
             default:
                 $action = new DefaultAction();
                 break;
