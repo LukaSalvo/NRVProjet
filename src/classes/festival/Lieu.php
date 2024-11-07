@@ -8,6 +8,7 @@ use iutnc\nrv\exception as E;
 class Lieu  {
 
 
+
     
 
     private string  $nom_lieu;
