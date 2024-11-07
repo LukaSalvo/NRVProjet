@@ -36,7 +36,7 @@ CREATE TABLE `soiree` (
 	`nom_soiree` VARCHAR(100) NOT NULL,
 	`id_lieu` INT NOT NULL,
 	`date` DATE NOT NULL,
-	PRIMARY KEY(`id_lieu`, `date`),
+	PRIMARY KEY(`id_soiree`),
 	FOREIGN KEY (`id_lieu`) REFERENCES `lieu`(`id_lieu`)
 );
 DROP TABLE IF EXISTS `style`;
@@ -50,7 +50,7 @@ DROP TABLE IF EXISTS `spectacle`;
 CREATE TABLE `spectacle` (
 	`id_spectacle` INT NOT NULL AUTO_INCREMENT,
 	`nomSpec` VARCHAR(100) NOT NULL,
-	`id_style` VARCHAR(50) NOT NULL,
+	`id_style` INT NOT NULL,
 	`id_soiree` INT NOT NULL,
 	`duree` INT NOT NULL,
 	PRIMARY KEY(`id_spectacle`),
