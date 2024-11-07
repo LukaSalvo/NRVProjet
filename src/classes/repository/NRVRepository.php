@@ -99,5 +99,25 @@ class NRVRepository{
     public function getPDO(): PDO {
         return $this->pdo;
     }
+
+    public function getSpectaclesByDate(string $date): array {
+        $stmt = $this->pdo->prepare("SELECT id_spectacle, nomSpec, style, durée FROM spectacle JOIN soiree2spectacle ON spectacle.id_spectacle = soiree2spectacle.id_spectacle JOIN soiree ON soiree2spectacle.id_soiree = soiree.id_soiree WHERE soiree.date = :date");
+        $stmt->execute(['date' => $date]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getSpectaclesByStyle(string $style): array {
+        $stmt = $this->pdo->prepare("SELECT id_spectacle, nomSpec, style, durée FROM spectacle WHERE style = :style");
+        $stmt->execute(['style' => $style]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getSpectaclesByLocation(string $location): array {
+        $stmt = $this->pdo->prepare("SELECT id_spectacle, nomSpec, style, durée FROM spectacle JOIN soiree2spectacle ON spectacle.id_spectacle = soiree2spectacle.id_spectacle JOIN soiree ON soiree2spectacle.id_soiree = soiree.id_soiree JOIN lieu ON soiree.id_lieu = lieu.id_lieu WHERE lieu.nom_lieu = :location");
+        $stmt->execute(['location' => $location]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
+    
     
 }

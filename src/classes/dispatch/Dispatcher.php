@@ -36,6 +36,14 @@ class Dispatcher {
                 break;
             case 'addSpectacle':
                 $action = new AddSpectacleActiob();
+            case 'filterByDate':
+                $action = new DisplaySpectaclesByDateAction();
+                break;
+            case 'filterByStyle':
+                $action = new DisplaySpectacleByStyleAction();
+                break;
+            case 'filterByLocation':
+                $action = new DisplaySpectacleByLocationAction();
             default:
                 $action = new DefaultAction();
                 break;
