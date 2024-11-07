@@ -24,6 +24,10 @@ class Lieu  {
         $this->nom_lieu = $nom_lieu;
     }
 
+    public function __tostring(): string {
+        return $this->nom_lieu;
+    }
+
 
 
 }
