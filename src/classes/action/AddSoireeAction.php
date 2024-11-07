@@ -59,9 +59,9 @@ class AddSoireeAction extends Action {
     }
 
     private function addSoiree() : string {
-        $nom = filter_var($_POST['nom'], FILTER_SANITIZE_STRING);
-        $date = filter_var($_POST['date'] , FILTER_SANITIZE_STRING);
-        $lieu = filter_var($_POST['lieu'], FILTER_SANITIZE_STRING);
+        $nom = filter_var($_POST['nom'], FILTER_SANITIZE_SPECIAL_CHARS);
+        $date = filter_var($_POST['date'] , FILTER_SANITIZE_SPECIAL_CHARS);
+        $lieu = filter_var($_POST['lieu'], FILTER_SANITIZE_SPECIAL_CHARS);
         $nb_place = filter_var($_POST['nb_place'], FILTER_SANITIZE_NUMBER_INT);
         $nom_emplacement = filter_var($_POST['nom_emplacement'], FILTER_SANITIZE_SPECIAL_CHARS);
         
