@@ -2,6 +2,7 @@
 
 namespace iutnc\nrv\action;
 
+use iutnc\nrv\auth\Authz;
 use iutnc\nrv\repository\NRVRepository;
 
 class DisplaySoireeAction extends Action {
@@ -35,8 +36,14 @@ class DisplaySoireeAction extends Action {
                 $output .= "<li><strong>{$spectacle['nomSpec']}</strong> - {$spectacle['style']} ({$spectacle['durée']} minutes)</li>";
             }
 
+            $output .= "</ul>";
+
+            if (isset($_SESSION['user']) && Authz::isAdmin($_SESSION['user']['id_user'])) {
+                $output .= "
+                <a href='?action=addSpectacle&soiree_id={$idSoiree}' class='btn-primary'>Ajouter un spectacle</a>";
+            }
+
             $output .= "
-                </ul>
                 <a href='?action=displaySoiree'>Retour à la liste des soirées</a>
             </body>
             </html>";

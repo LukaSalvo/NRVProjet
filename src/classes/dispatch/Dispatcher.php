@@ -36,7 +36,6 @@ class Dispatcher {
                 break;
             case 'addSpectacle':
                 $action = new AddSpectacleActiob();
-                break;
             default:
                 $action = new DefaultAction();
                 break;
