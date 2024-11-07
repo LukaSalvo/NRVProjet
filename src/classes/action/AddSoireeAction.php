@@ -1,6 +1,9 @@
 <?php
 
 namespace iutnc\nrv\action;
+use iutnc\nrv\festival\Soiree;
+use iutnc\nrv\festival\Lieu;
+use iutnc\nrv\repository\NRVRepository;
 
 class AddSoireeAction extends Action {
 
@@ -60,7 +63,7 @@ class AddSoireeAction extends Action {
         $date = filter_var($_POST['date'] , FILTER_SANITIZE_STRING);
         $lieu = filter_var($_POST['lieu'], FILTER_SANITIZE_STRING);
         $nb_place = filter_var($_POST['nb_place'], FILTER_SANITIZE_NUMBER_INT);
-        $nom_emplacement = filter_var($_POST['nom_emplacement'], FILTER_SANITIZE_STRING);
+        $nom_emplacement = filter_var($_POST['nom_emplacement'], FILTER_SANITIZE_SPECIAL_CHARS);
         
         // Appel à la base de données pour ajouter la soirée
         NRVRepository::setConfig(__DIR__ . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "config" . DIRECTORY_SEPARATOR . "config.ini");
