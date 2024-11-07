@@ -61,10 +61,27 @@ class AddSoireeAction extends Action {
         $lieu = filter_var($_POST['lieu'], FILTER_SANITIZE_STRING);
         $nb_place = filter_var($_POST['nb_place'], FILTER_SANITIZE_NUMBER_INT);
         $nom_emplacement = filter_var($_POST['nom_emplacement'], FILTER_SANITIZE_STRING);
+        
+        // Appel à la base de données pour ajouter la soirée
+        NRVRepository::setConfig(__DIR__ . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "config" . DIRECTORY_SEPARATOR . "config.ini");
+        $pdo = NRVRepository::getInstance();
+        
         $LieuSoiree = new Lieu($nb_place, $nom_emplacement, $lieu);
         $soiree = new Soiree($nom, $date);
         $soiree->setLieu($LieuSoiree);
+        
         $_SESSION['soiree'] = serialize($soiree);
+        
+        $inser1 = $pdo->prepare("INSERT INTO lieu (nom_lieu, adresse, nb_place) VALUES (:lieu, :nb_place, :nom_emplacement)");
+        $inser1->execute(['lieu' => $lieu, 'adresse' => $nom_emplacement, 'nb_place' => $nb_place]);
+        
+        // Récupération de l'ID du lieu inséré
+        $id_lieu = $pdo->lastInsertId();
+
+        $inser2 = $pdo->prepare("INSERT INTO soiree (id_lieu, date) VALUES (:id_lieu, :date)");
+        $inser2->execute(['id_lieu' => $id_lieu, 'date' => $date]);
+        
+        
         return 'Soirée ajoutée avec succès';
     }
 
