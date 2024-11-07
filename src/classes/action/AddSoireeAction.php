@@ -43,6 +43,8 @@ class AddSoireeAction extends Action {
                     <input type="number" id="nb_place" name="nb_place" required>
                     <label for="nom_emplacement">Nom de l\'emplacement:</label>
                     <input type="text" id="nom_emplacement" name="nom_emplacement" required>
+                    <label for="code_postal">Code postal : </label>
+                    <input type="number" id="code_postal" name="code_postal" required>
                     <input type="submit" value="Ajouter">
                 </form>
             </div>
@@ -56,13 +58,14 @@ class AddSoireeAction extends Action {
         $lieu = filter_var($_POST['lieu'], FILTER_SANITIZE_SPECIAL_CHARS);
         $nb_place = filter_var($_POST['nb_place'], FILTER_SANITIZE_NUMBER_INT);
         $nom_emplacement = filter_var($_POST['nom_emplacement'], FILTER_SANITIZE_SPECIAL_CHARS);
+        $code_postal = filter_var($_POST['code_postal'], FILTER_SANITIZE_NUMBER_INT);
         
         // Appel à la base de données pour ajouter la soirée
         NRVRepository::setConfig(__DIR__ . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "config" . DIRECTORY_SEPARATOR . "db.config.ini");
         $repository = NRVRepository::getInstance();
         $pdo = $repository->getPDO();
         
-        $LieuSoiree = new Lieu($nb_place, $nom_emplacement, $lieu);
+        $LieuSoiree = new Lieu($nb_place, $nom_emplacement, $lieu, $code_postal);
         $soiree = new Soiree($nom, $date);
         $soiree->setLieu($LieuSoiree);
         
