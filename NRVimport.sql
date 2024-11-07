@@ -9,6 +9,7 @@ CREATE TABLE `lieu` (
 	`id_lieu` INT NOT NULL AUTO_INCREMENT,
 	`nom_lieu` VARCHAR(100) NOT NULL,
 	`adresse` VARCHAR(100) NOT NULL,
+    `code_postal` VARCHAR(100) NOT NULL,
 	`nb_place` INT,
 	PRIMARY KEY (`id_lieu`)
 );
@@ -80,10 +81,10 @@ CREATE TABLE `soiree2spectacle` (
 
 
 
-INSERT INTO lieu (id_lieu ,nom_lieu, adresse, nb_place) VALUES
-                                                       (1,'Zénith de Nancy', 'Rue du Zénith, Maxéville', 5000),
-                                                       (2,'L\'Autre  Gérome Canals', '45 Bd d\'Austrasie, Nancy', 1200),
-                                                       (3,'Théâtre de la Manufacture', '10 Rue Baron Louis, Nancy', 850);
+INSERT INTO lieu (id_lieu ,nom_lieu, adresse,code_postal, nb_place) VALUES
+                                                       (1,'Zénith de Nancy', 'Rue du Zénith, Maxéville', 54320,5000),
+                                                       (2,'L\'Autre  Gérome Canals', '45 Bd d\'Austrasie, Nancy',54000, 1200),
+                                                       (3,'Théâtre de la Manufacture', '10 Rue Baron Louis, Nancy', 54000,850);
 
 
 INSERT INTO `user` (nom_user, email, password, role) VALUES
