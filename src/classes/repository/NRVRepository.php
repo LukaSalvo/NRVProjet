@@ -1,7 +1,5 @@
 <?php
 
-
-
 namespace iutnc\nrv\repository;
 use PDO;
 use iutnc\deefy\repository\DeefyRepository;
@@ -19,7 +17,6 @@ class NRVRepository{
         ]);
     }
 
-
     public static function getInstance():? NRVRepository {
         if (is_null(self::$instance)) {
             if (empty(self::$config)) {
@@ -32,7 +29,6 @@ class NRVRepository{
     }
 
     public static function setConfig(string $file) {
-        // echo "Chemin du fichier de configuration : " . __DIR__ . '/../../../config/db.config.ini';
         $conf = parse_ini_file($file);
         if ($conf === false) {
             throw new \Exception("Erreur pendant la lecture du fichier de configuration.");
@@ -83,7 +79,7 @@ class NRVRepository{
     }
     
     public function findSpectaclesBySoireeId(int $soireeId): array {
-        $stmt = $this->pdo->prepare("SELECT spectacle.nomSpec, spectacle.style, spectacle.durée FROM soiree2spectacle 
+        $stmt = $this->pdo->prepare("SELECT spectacle.nomSpec, spectacle.style, spectacle.duree FROM soiree2spectacle 
                                      JOIN spectacle ON soiree2spectacle.id_spectacle = spectacle.id_spectacle 
                                      WHERE soiree2spectacle.id_soiree = :soireeId");
         $stmt->execute(['soireeId' => $soireeId]);
@@ -91,7 +87,7 @@ class NRVRepository{
     }
 
     public function getAllSpectacles(): array {
-        $stmt = $this->pdo->query("SELECT id_spectacle, nomSpec, style, durée FROM spectacle");
+        $stmt = $this->pdo->query("SELECT id_spectacle, nomSpec, style, duree FROM spectacle");
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     

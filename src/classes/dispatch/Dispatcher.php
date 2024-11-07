@@ -25,14 +25,19 @@ class Dispatcher {
                 break;
             case 'login':
                 $action = new LogInAction();
+                break;
             case 'register':
                 $action = new RegisterAction();
+                break;
             case 'logout':
                 $action = new LogoutAction();
+                break;
             case 'displaySoiree':
                 $action = new DisplaySoireeAction();
+                break;
             case 'addSpectacle':
-                $action = new AddSpectacleActiob();
+                $action = new AddSpectacleAction();
+                break;
             default:
                 $action = new DefaultAction();
                 break;

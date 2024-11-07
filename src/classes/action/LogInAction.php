@@ -9,43 +9,66 @@ use iutnc\nrv\exception\AuthnException;
 class LogInAction extends Action {
 
     public function execute(): string {
-        if (isset($_SESSION['user'])) {
-            return "Vous êtes déjà connecté en tant que " . $_SESSION['user']['nomUtilisateur'];
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            return $this->permettreConnexion();
         }
 
-        if (isset($_POST['email']) && isset($_POST['password'])) {
-            $email = $_POST['email'];
-            $password = $_POST['password'];
+        return <<<HTML
+        <h1>Bienvenue sur NRV !</h1>
+        <div>
+        <br>
+        <h2>Connexion à NRV</h2>
+        <form method="POST" action="?action=login" enctype="multipart/form-data">
 
-            try {
-                $userId = AuthnProvider::signin($email, $password);
+            <label for="email">Adresse Mail :</label><br>
+            <input type="email" name="email" id="email" required><br><br>
+            
+            <label for="password">Mot de passe :</label><br>
+            <input type="password" name="password" id="password" required><br><br>
+            <br>
+            
+            <input type="submit" value="Connexion">
+            <br>
+            <a href="?action=register">Je n'ai pas encore de compte.</a>
+            
+        </form>
+        <br>
+        
+        </div>
+        HTML;
+    }
 
-                if (Authz::isAdmin($userId)) {
-                    return "Bienvenue, Administrateur!";
-                } else {
-                    return "Bienvenue, Utilisateur!";
-                }
+    public function permettreConnexion(): string {
+        $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
+        $password = filter_var($_POST['password'], FILTER_SANITIZE_STRING);
 
-            } catch (AuthnException $e) {
-                if ($e->getMessage() === "Aucun compte trouvé pour cet email.") {
-                    return <<<HTML
-                        <p>Aucun compte trouvé pour cet email. <a href="?action=register">Créer un compte</a></p>
-                    HTML;
-                } else {
-                    return "Erreur : " . $e->getMessage();
-                }
+        // Vérification de l'email
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            return "<p>Adresse mail invalide !</p>";
+        }
+
+        try {
+            // Authentification
+            $userId = AuthnProvider::signin($email, $password);
+
+            // Vérification du rôle de l'utilisateur
+            $user = unserialize($_SESSION['user']);
+            $authz = new Authz($user);
+
+            if ($authz->isAdmin()) {
+                return "<p>Bienvenue, Administrateur!</p>";
+            } else {
+                return "<p>Bienvenue, Utilisateur!</p>";
             }
 
-        return <<<HTML
-            <form method="POST" action="?action=login">
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" required>
-                
-                <label for="password">Mot de passe:</label>
-                <input type="password" id="password" name="password" required>
-                
-                <button type="submit">Se connecter</button>
-            </form>
-        HTML;
+        } catch (AuthnException $e) {
+            if ($e->getMessage() === "Aucun compte trouvé pour cet email.") {
+                return <<<HTML
+                    <p>Aucun compte trouvé pour cet email. <a href="?action=register">Créer un compte</a></p>
+                HTML;
+            } else {
+                return "<p>Erreur : " . $e->getMessage() . "</p>";
+            }
+        }
     }
 }

@@ -10,7 +10,6 @@ class AddSpectacleAction extends Action {
         $repo = NRVRepository::getInstance();
         $spectacles = $repo->getAllSpectacles();
 
-        // Vérifie si le formulaire a été soumis
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['spectacle_id'], $_POST['soiree_id'])) {
             try {
                 $spectacleId = (int)$_POST['spectacle_id'];
@@ -20,8 +19,11 @@ class AddSpectacleAction extends Action {
             } catch (\Exception $e) {
                 return $this->renderErrorMessage();
             }
+        } elseif (isset($_GET['soiree_id'])) {
+            $soireeId = (int)$_GET['soiree_id'];
+            return $this->renderSpectacleList($spectacles, $soireeId);
         } else {
-            return $this->renderSpectacleList($spectacles);
+            return "<p>Erreur : Aucun ID de soirée fourni.</p>";
         }
     }
 
@@ -41,7 +43,7 @@ class AddSpectacleAction extends Action {
         </div>";
     }
 
-    private function renderSpectacleList(array $spectacles): string {
+    private function renderSpectacleList(array $spectacles, int $soireeId): string {
         $formHtml = "<div class='content'><h2>Ajouter un spectacle à la soirée</h2><div class='spectacle-list'>";
 
         foreach ($spectacles as $spectacle) {
@@ -49,11 +51,11 @@ class AddSpectacleAction extends Action {
             <div class="spectacle-item">
                 <div class="spectacle-info">
                     <p class="spectacle-title">Spectacle: <strong>{$spectacle['nomSpec']}</strong></p>
-                    <p class="spectacle-details">Style: {$spectacle['style']} | Durée: {$spectacle['durée']} min</p>
+                    <p class="spectacle-details">Style: {$spectacle['style']} | Durée: {$spectacle['duree']} min</p>
                 </div>
                 <form method="post" action="?action=addSpectacle" class="add-spectacle-form">
                     <input type="hidden" name="spectacle_id" value="{$spectacle['id_spectacle']}">
-                    <input type="hidden" name="soiree_id" value="{$_GET['soiree_id']}">
+                    <input type="hidden" name="soiree_id" value="{$soireeId}">
                     <button type="submit" class="btn-primary">Ajouter</button>
                 </form>
             </div>
