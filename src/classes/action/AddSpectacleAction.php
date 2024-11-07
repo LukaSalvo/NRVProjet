@@ -2,67 +2,51 @@
 
 namespace iutnc\nrv\action;
 
+use iutnc\nrv\auth\Authz;
 use iutnc\nrv\repository\NRVRepository;
 
 class AddSpectacleAction extends Action {
 
     public function execute(): string {
+        // Vérifie si l'utilisateur est un admin
+        if (!isset($_SESSION['user']) || !Authz::isAdmin($_SESSION['user']['id_user'])) {
+            return "<p>Accès refusé : vous n'avez pas les droits nécessaires pour accéder à cette page.</p>";
+        }
+
         $repo = NRVRepository::getInstance();
-        $spectacles = $repo->getAllSpectacles();
 
-        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['spectacle_id'], $_POST['soiree_id'])) {
-            try {
-                $spectacleId = (int)$_POST['spectacle_id'];
-                $soireeId = (int)$_POST['soiree_id'];
-                $repo->addSpectacleToSoiree($spectacleId, $soireeId);
-                return $this->renderSuccessMessage($soireeId);
-            } catch (\Exception $e) {
-                return $this->renderErrorMessage();
-            }
-        } elseif (isset($_GET['soiree_id'])) {
-            $soireeId = (int)$_GET['soiree_id'];
-            return $this->renderSpectacleList($spectacles, $soireeId);
-        } else {
-            return "<p>Erreur : Aucun ID de soirée fourni.</p>";
-        }
-    }
+        // Traitement du formulaire d'ajout de spectacle
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['nomSpec'], $_POST['style'], $_POST['duree'], $_POST['description'], $_POST['artistes'])) {
+            $nomSpec = $_POST['nomSpec'];
+            $style = $_POST['style'];
+            $duree = (int)$_POST['duree'];
+            $description = $_POST['description'];
+            $artistes = explode(',', $_POST['artistes']); // Liste d'artistes séparés par des virgules
 
-    private function renderSuccessMessage(int $soireeId): string {
-        return "
-        <div class='content'>
-            <p class='success-msg'>Spectacle ajouté avec succès à la soirée !</p>
-            <a href='?action=displaySoiree&id_soiree={$soireeId}' class='btn-primary'>Retour à la soirée</a>
-        </div>";
-    }
-
-    private function renderErrorMessage(): string {
-        return "
-        <div class='content'>
-            <p class='error-msg'>Erreur : Spectacle déjà ajouté</p>
-            <a href='?action=displaySoiree' class='btn-primary'>Retour aux soirées</a>
-        </div>";
-    }
-
-    private function renderSpectacleList(array $spectacles, int $soireeId): string {
-        $formHtml = "<div class='content'><h2>Ajouter un spectacle à la soirée</h2><div class='spectacle-list'>";
-
-        foreach ($spectacles as $spectacle) {
-            $formHtml .= <<<HTML
-            <div class="spectacle-item">
-                <div class="spectacle-info">
-                    <p class="spectacle-title">Spectacle: <strong>{$spectacle['nomSpec']}</strong></p>
-                    <p class="spectacle-details">Style: {$spectacle['style']} | Durée: {$spectacle['duree']} min</p>
-                </div>
-                <form method="post" action="?action=addSpectacle" class="add-spectacle-form">
-                    <input type="hidden" name="spectacle_id" value="{$spectacle['id_spectacle']}">
-                    <input type="hidden" name="soiree_id" value="{$soireeId}">
-                    <button type="submit" class="btn-primary">Ajouter</button>
-                </form>
-            </div>
-            HTML;
+            $spectacleId = $repo->createSpectacle($nomSpec, $style, $duree, $description, $artistes);
+            return "<p>Spectacle ajouté avec succès ! <a href='?action=displaySpectacleDetail&id_spectacle={$spectacleId}'>Voir le spectacle</a></p>";
         }
 
-        $formHtml .= "</div></div>";
-        return $formHtml;
+        // Formulaire de création de spectacle
+        return <<<HTML
+            <form method="POST" action="?action=addSpectacle">
+                <label for="nomSpec">Nom du spectacle :</label>
+                <input type="text" id="nomSpec" name="nomSpec" required>
+
+                <label for="style">Style musical :</label>
+                <input type="text" id="style" name="style" required>
+
+                <label for="duree">Durée (minutes) :</label>
+                <input type="number" id="duree" name="duree" required>
+
+                <label for="description">Description :</label>
+                <textarea id="description" name="description" required></textarea>
+
+                <label for="artistes">Artistes (séparés par des virgules) :</label>
+                <input type="text" id="artistes" name="artistes">
+
+                <button type="submit">Créer le spectacle</button>
+            </form>
+        HTML;
     }
 }

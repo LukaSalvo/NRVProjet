@@ -39,7 +39,7 @@ class Dispatcher {
                 $action = new DisplaySoireeAction();
                 break;
             case 'addSpectacle':
-                $action = new AddSpectacleActiob();
+                $action = new AddSpectacleAction();
                 break;
             case 'filterByDate':
                 $action = new DisplaySpectacleByDateAction();
