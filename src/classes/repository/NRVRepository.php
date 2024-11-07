@@ -3,13 +3,13 @@
 
 
 namespace iutnc\nrv\repository;
-
+use PDO;
 use iutnc\deefy\repository\DeefyRepository;
 use iutnc\nrv\exception\InvalidPropertyNameException;
 
 class NRVRepository{
 
-    private PDO $pdo;
+    private \PDO $pdo;
     private static ?NRVRepository $instance = null;
     private static array $config = [];
 
@@ -69,6 +69,10 @@ class NRVRepository{
         $stmt->execute(['id' => $id]);
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         return $result ? $result['role'] : null;
+    }
+
+    public function getPDO(): PDO {
+        return $this->pdo;
     }
     
 }
