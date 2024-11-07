@@ -3,6 +3,8 @@
 
 namespace iutnc\nrv\dispatch;
 
+use iutnc\nrv\action\DefaultAction;
+use iutnc\nrv\action\AddSoireeAction;
 
 class Dispatcher{
 
@@ -20,6 +22,9 @@ class Dispatcher{
         switch ($this->action) {
             case 'default':
                 $action = DefaultAction();
+                break;
+            case 'addSoiree':
+                $action = AddSoireeAction();
                 break;
         }
         $res = $action->execute();
