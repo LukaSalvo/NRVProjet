@@ -32,6 +32,7 @@ class Spectable  {
         if (property_exists($this,$attribut)){
             $this->$attribut = $value;
         }
+
         else throw new E\InvalidPropertyNameException("$attribut : invalid property");
 
     }
