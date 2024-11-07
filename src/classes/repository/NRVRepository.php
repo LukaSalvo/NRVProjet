@@ -32,6 +32,7 @@ class NRVRepository{
     }
 
     public static function setConfig(string $file) {
+        // echo "Chemin du fichier de configuration : " . __DIR__ . '/../../../config/db.config.ini';
         $conf = parse_ini_file($file);
         if ($conf === false) {
             throw new \Exception("Erreur pendant la lecture du fichier de configuration.");

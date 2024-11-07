@@ -13,7 +13,7 @@ use iutnc\nrv\dispatch\Dispatcher;
 
 session_start();
 
-NRVRepository::setconfig('src/config/db.config.ini');
+NRVRepository::setConfig('src/config/db.config.ini');
 
 $dispatcher = new Dispatcher();
 $dispatcher->run();
