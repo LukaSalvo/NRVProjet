@@ -1,0 +1,14 @@
+{
+  "name": "iutnc/nrv",
+  "description": "projetNrv",
+  "type": "project",
+  "autoload": {
+    "psr-4": {
+      "iutnc\\nrv\\" : "./conf",
+      "iutnc\\nrv\\" : "./src/classes"
+    }
+  },
+  "require": {
+    "ext-pdo": "*"
+  }
+}

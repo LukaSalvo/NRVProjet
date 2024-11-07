@@ -12,11 +12,10 @@ class Soiree{
     private Lieu $lieu;
 
 
-    public function __construct(string $nom, string $date, array $ListeSpectacle, Lieu $lieu){
-        $this->id_soiree = $id;
+    public function __construct(string $nom, string $date){
+        $this->nom = $nom;
         $this->date = $date;
-        $this->ListeSpectacle = $ListeSpectacle;
-        $this->lieu = $lieu;
+        
 
     }
 
@@ -25,6 +24,14 @@ class Soiree{
             return $this->$attribut;
         }
         throw new E\InvalidPropertyNameException("$attribut : invalid property");
+    }
+
+    public function setListeSpec(array $ListeSpectacle): void{
+        $this->ListeSpectacle = $ListeSpectacle;
+    }
+
+    public function setLieu(Lieu $lieu): void{
+        $this->lieu = $lieu;
     }
 
 
