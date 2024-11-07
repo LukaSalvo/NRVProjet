@@ -4,7 +4,7 @@ namespace iutnc\nrv\action;
 
 use iutnc\nrv\repository\NRVRepository;
 
-class DisplaySpectaclesByLocationAction extends Action {
+class DisplaySpectacleByLocationAction extends Action {
 
     public function execute(): string {
         $repo = NRVRepository::getInstance();

@@ -1,13 +1,17 @@
 <?php
 
 namespace iutnc\nrv\dispatch;
-use iutnc\nrv\action\LogInAction;
 use iutnc\nrv\action\AddSoireeAction;
-use iutnc\nrv\action\AddSpectacleAction;
-use iutnc\nrv\action\DisplaySoireeAction;
 use iutnc\nrv\action\DefaultAction;
+use iutnc\nrv\action\DisplaySoireeAction;
+use iutnc\nrv\action\DisplaySpectacleByDateAction;
+use iutnc\nrv\action\DisplaySpectacleByStyleAction;
+use iutnc\nrv\action\DisplaySpectacleByLocationAction;
+use iutnc\nrv\action\DisplaySpectacleDetailAction;
+use iutnc\nrv\action\LogInAction;
+use iutnc\nrv\action\LogOutAction;
 use iutnc\nrv\action\RegisterAction;
-use iutnc\nrv\action\LogoutAction;
+use iutnc\nrv\action\AddSpectacleAction;
 
 class Dispatcher {
 
@@ -36,14 +40,19 @@ class Dispatcher {
                 break;
             case 'addSpectacle':
                 $action = new AddSpectacleActiob();
+                break;
             case 'filterByDate':
-                $action = new DisplaySpectaclesByDateAction();
+                $action = new DisplaySpectacleByDateAction();
                 break;
             case 'filterByStyle':
                 $action = new DisplaySpectacleByStyleAction();
                 break;
             case 'filterByLocation':
                 $action = new DisplaySpectacleByLocationAction();
+                break;
+            case 'displaySpectacleDetail':
+                $action = new DisplaySpectacleDetailAction();
+                break;
             default:
                 $action = new DefaultAction();
                 break;

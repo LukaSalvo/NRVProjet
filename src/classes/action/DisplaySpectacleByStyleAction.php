@@ -4,7 +4,7 @@ namespace iutnc\nrv\action;
 
 use iutnc\nrv\repository\NRVRepository;
 
-class DisplaySpectaclesByStyleAction extends Action {
+class DisplaySpectacleByStyleAction extends Action {
 
     public function execute(): string {
         $repo = NRVRepository::getInstance();
@@ -15,7 +15,7 @@ class DisplaySpectaclesByStyleAction extends Action {
 
             $output = "<h2>Spectacles pour le style : {$style}</h2><ul>";
             foreach ($spectacles as $spectacle) {
-                $output .= "<li><a href='?action=displaySpectacleDetail&id_spectacle={$spectacle['id_spectacle']}'>{$spectacle['nomSpec']} - {$spectacle['style']} ({$spectacle['durée']} minutes)</a></li>";
+                $output .= "<li><a href='?action=displaySpectacleDetail&id_spectacle={$spectacle['id_spectacle']}'>{$spectacle['nomSpec']} - {$spectacle['style']} ({$spectacle['duree']} minutes)</a></li>";
             }
             $output .= "</ul><a href='?action=filterByStyle'>Retour à la sélection de style</a>";
             return $output;
