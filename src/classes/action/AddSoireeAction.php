@@ -18,6 +18,8 @@ class AddSoireeAction extends Action {
         }
     }
 
+    
+    
     private function displayForm(): string {
         return '
         <!DOCTYPE html>

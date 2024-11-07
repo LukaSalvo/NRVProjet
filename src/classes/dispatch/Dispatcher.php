@@ -1,9 +1,11 @@
 <?php
 
 namespace iutnc\nrv\dispatch;
-
+use iutnc\nrv\action\LogInAction;
 use iutnc\nrv\action\AddSoireeAction;
 use iutnc\nrv\action\DefaultAction;
+use iutnc\nrv\action\RegisterAction;
+use iutnc\nrv\action\LogoutAction;
 
 class Dispatcher {
 
@@ -20,10 +22,13 @@ class Dispatcher {
                 break;
             case 'login':
                 $action = new LogInAction();
+                break;
             case 'register':
                 $action = new RegisterAction();
+                break;
             case 'logout':
                 $action = new LogoutAction();
+                break;
             default:
                 $action = new DefaultAction();
                 break;
