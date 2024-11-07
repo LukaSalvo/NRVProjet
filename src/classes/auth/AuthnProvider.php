@@ -5,6 +5,7 @@ namespace iutnc\nrv\auth;
 use iutnc\nrv\repository\NRVRepository;
 use iutnc\nrv\exception\AuthnException;
 use iutnc\nrv\User\User;
+use PDOException;
 
 class AuthnProvider {
 
@@ -29,7 +30,20 @@ class AuthnProvider {
                 throw new AuthnException("Aucun compte trouvé pour cet email.");
             }
 
-            if (!password_verify($password, $user['password'])) {
+            // Debug: Afficher les informations de l'utilisateur récupérées
+            error_log("User data: " . print_r($user, true));
+
+            // Debug: Afficher le mot de passe haché récupéré
+            error_log("Hashed password from DB: " . $user['password']);
+
+            // Décoder les caractères spéciaux dans le mot de passe fourni
+            $decodedPassword = htmlspecialchars_decode($password);
+
+            // Debug: Afficher le mot de passe fourni par l'utilisateur après décodage
+            error_log("Password provided (decoded): " . $decodedPassword);
+
+            if (!password_verify($decodedPassword, $user['password'])) {
+                error_log("Password verification failed.");
                 throw new AuthnException("Mot de passe incorrect.");
             }
 
@@ -38,6 +52,7 @@ class AuthnProvider {
 
             return $user['id_user'];
         } catch (PDOException $e) {
+            error_log("Database error: " . $e->getMessage());
             throw new AuthnException("Erreur de base de données : " . $e->getMessage());
         }
     }
@@ -57,7 +72,7 @@ class AuthnProvider {
         // Vérifie la sécurité du mot de passe
         if (self::checkPasswordStrength($mdp, $taille_mini)) {
             $hashedMdp = password_hash($mdp, PASSWORD_DEFAULT);
-            $stmt = $pdo->getPDO()->prepare("INSERT INTO user(email, password) VALUES(?, ?);");
+            $stmt = $pdo->getPDO()->prepare("INSERT INTO user(email, password, role) VALUES(?, ?, 1);");
             $stmt->execute([$email, $hashedMdp]);
         } else {
             throw new AuthnException("Le mot de passe n'est pas assez sécurisé.");
