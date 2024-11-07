@@ -18,6 +18,12 @@ class Dispatcher {
             case 'addSoiree':
                 $action = new AddSoireeAction();
                 break;
+            case 'login':
+                $action = new LogInAction();
+            case 'register':
+                $action = new RegisterAction();
+            case 'logout':
+                $action = new LogoutAction();
             default:
                 $action = new DefaultAction();
                 break;
