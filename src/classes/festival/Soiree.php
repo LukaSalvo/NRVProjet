@@ -34,5 +34,9 @@ class Soiree{
         $this->lieu = $lieu;
     }
 
+    public function addSpectacle(Spectacle $spectacle): void{
+        $this->ListeSpectacle[] = $spectacle;
+    }
+
 
 }

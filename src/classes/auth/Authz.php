@@ -3,21 +3,39 @@
 namespace iutnc\nrv\auth;
 
 use iutnc\nrv\exception\AuthnException;
+use iutnc\nrv\repository\NRVRepository;
+use iutnc\nrv\User\User;
 
 class Authz {
 
+    private User $authenticated_user;
+
+    public function __construct(User $user) {
+        $this->authenticated_user = $user;
+    }
+
     /**
      * Vérifie si l'utilisateur connecté a un rôle spécifique
-     * @param string $role
+     * @param int $requiredRole
+     * @return bool
      * @throws AuthnException
      */
-    public static function checkRole(string $role): void {
-        if (!isset($_SESSION['user'])) {
-            throw new AuthnException("Aucun utilisateur n'est authentifié.");
-        }
+    public function hasRole(int $requiredRole): bool {
+        $repo = NRVRepository::getInstance();
+        $userId = $this->authenticated_user->getId();
 
-        if ($_SESSION['user']['role'] !== $role) {
-            throw new AuthnException("Accès refusé : rôle insuffisant.");
+        try {
+            $stmt = $repo->getPDO()->prepare("SELECT role FROM user WHERE id_user = :user_id");
+            $stmt->execute(['user_id' => $userId]);
+            $user = $stmt->fetch(); // permet d'obtenir la colonne role de la table user
+
+            if ($user && $user['role'] >= $requiredRole) {
+                return true;
+            }
+
+            return false;
+        } catch (PDOException $e) {
+            throw new AuthnException("Erreur lors de la vérification du rôle de l'utilisateur.");
         }
     }
 
@@ -26,17 +44,7 @@ class Authz {
      * @return bool
      * @throws AuthnException
      */
-    public static function isAdmin(): bool {
-        $repo = NRVRepository::getInstance();
-
-        try {
-            $role = $repo->getUserRoleById($userId);
-            if ($role === null) {
-                throw new AuthnException("Utilisateur non trouvé.");
-            }
-            return $role === '100';
-        } catch (PDOException $e) {
-            throw new AuthnException("Erreur de base de données : " . $e->getMessage());
-        }
+    public function isAdmin(): bool {
+        return $this->hasRole(100); // Supposons que le rôle d'administrateur est 100
     }
 }

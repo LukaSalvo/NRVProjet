@@ -95,5 +95,9 @@ class NRVRepository{
         $stmt = $this->pdo->prepare("INSERT INTO soiree2spectacle (id_soiree, id_spectacle) VALUES (:soireeId, :spectacleId)");
         return $stmt->execute(['soireeId' => $soireeId, 'spectacleId' => $spectacleId]);
     }
+
+    public function getPDO(): PDO {
+        return $this->pdo;
+    }
     
 }

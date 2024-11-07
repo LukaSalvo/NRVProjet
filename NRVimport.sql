@@ -4,14 +4,12 @@ SET foreign_key_checks = 0;
 SET sql_mode = 'NO_AUTO_VALUE_ON_ZERO';
 
 
-
-
-
 DROP TABLE IF EXISTS `lieu`;
 CREATE TABLE `lieu` (
 	`id_lieu` INT NOT NULL AUTO_INCREMENT,
 	`nom_lieu` VARCHAR(100) NOT NULL,
 	`adresse` VARCHAR(100) NOT NULL,
+    `code_postal` VARCHAR(100) NOT NULL,
 	`nb_place` INT,
 	PRIMARY KEY (`id_lieu`)
 );
@@ -42,16 +40,23 @@ CREATE TABLE `soiree` (
 	PRIMARY KEY(`id_soiree`),
 	FOREIGN KEY (`id_lieu`) REFERENCES `lieu`(`id_lieu`)
 );
+DROP TABLE IF EXISTS `style`;
+CREATE TABLE `style`(
+                        `id_style` INT NOT NULL,
+                        `nom_style` VARCHAR(100),
+                        PRIMARY KEY (`id_style`)
+);
 
 DROP TABLE IF EXISTS `spectacle`;
 CREATE TABLE `spectacle` (
 	`id_spectacle` INT NOT NULL AUTO_INCREMENT,
 	`nomSpec` VARCHAR(100) NOT NULL,
-	`style` VARCHAR(50) NOT NULL,
+	`id_style` INT NOT NULL,
 	`id_soiree` INT NOT NULL,
 	`duree` INT NOT NULL,
 	PRIMARY KEY(`id_spectacle`),
-	FOREIGN KEY (`id_soiree`) REFERENCES `soiree`(`id_soiree`)
+	FOREIGN KEY (`id_soiree`) REFERENCES `soiree`(`id_soiree`),
+    FOREIGN KEY (`id_style`) REFERENCES `style`(`id_style`)
 );
 
 
@@ -75,10 +80,11 @@ CREATE TABLE `soiree2spectacle` (
 );
 
 
-INSERT INTO lieu (id_lieu ,nom_lieu, adresse, nb_place) VALUES
-                                                       (1,'Zénith de Nancy', 'Rue du Zénith, Maxéville', 5000),
-                                                       (2,'L\'Autre  Gérome Canals', '45 Bd d\'Austrasie, Nancy', 1200),
-                                                       (3,'Théâtre de la Manufacture', '10 Rue Baron Louis, Nancy', 850);
+
+INSERT INTO lieu (id_lieu ,nom_lieu, adresse,code_postal, nb_place) VALUES
+                                                       (1,'Zénith de Nancy', 'Rue du Zénith, Maxéville', 54320,5000),
+                                                       (2,'L\'Autre  Gérome Canals', '45 Bd d\'Austrasie, Nancy',54000, 1200),
+                                                       (3,'Théâtre de la Manufacture', '10 Rue Baron Louis, Nancy', 54000,850);
 
 
 INSERT INTO `user` (nom_user, email, password, role) VALUES
@@ -103,7 +109,21 @@ INSERT INTO artiste (id_artiste , nom_artiste) VALUES
                                       (14,'Sonic Drive');
 
 
-
+INSERT INTO `style` (id_style,nom_style) VALUES
+                                    (1,'Rock'),
+                                    (2,'Hard Rock'),
+                                    (3,'Techno'),
+                                    (4,'Acid'),
+                                    (5,'Electronic'),
+                                    (6,'Metal'),
+                                    (7,'Blues'),
+                                    (8,'Synthwave'),
+                                    (9,'Funk'),
+                                    (10,'Darkwave'),
+                                    (11,'Trance'),
+                                    (12,'Electro'),
+                                    (13,'House'),
+                                    (14,'Drum and Bass');
 
 
 INSERT INTO `soiree` (id_soiree , nom_soiree,id_lieu, date) VALUES
@@ -123,22 +143,21 @@ INSERT INTO `soiree` (id_soiree , nom_soiree,id_lieu, date) VALUES
 
 
 
-INSERT INTO spectacle (id_spectacle, nomSpec, style, duree , id_soiree) VALUES
-                                                                            (1, 'Rock Vibes', 'Rock', 90, 1),
-                                                                            (2, 'Hardcore Thunder', 'Hard Rock', 105, 1),
-                                                                            (3, 'Techno Pulse', 'Techno', 100, 2),
-                                                                            (4, 'Acid Flow', 'Acid', 95, 2),
-                                                                            (5, 'Electric Night', 'Electronic', 85, 3),
-                                                                            (6, 'Metal Scream', 'Metal', 110, 3),
-                                                                            (7, 'Blue Fusion', 'Blues', 90, 4),
-                                                                            (8, 'Synthwave Dreams', 'Synthwave', 80, 4),
-                                                                            (9, 'Groove Jam', 'Funk', 75, 5),
-                                                                            (10, 'Dark Soundscapes', 'Darkwave', 90, 5),
-                                                                            (11, 'Hypnotic Journey', 'Trance', 95, 6),
-                                                                            (12, 'Neon Nights', 'Electro', 85, 6),
-                                                                            (13, 'Night Bassline', 'House', 90, 7),
-                                                                            (14, 'Pulse Driver', 'Drum and Bass', 105, 7);
-
+INSERT INTO spectacle (id_spectacle, nomSpec, id_style, duree , id_soiree) VALUES
+                                                                               (1, 'Rock Vibes', 1, 90, 1),
+                                                                               (2, 'Hardcore Thunder', 2, 105, 1),
+                                                                               (3, 'Techno Pulse', 3, 100, 2),
+                                                                               (4, 'Acid Flow', 4, 95, 2),
+                                                                               (5, 'Electric Night', 5, 85, 3),
+                                                                               (6, 'Metal Scream', 6, 110, 3),
+                                                                               (7, 'Blue Fusion', 7, 90, 4),
+                                                                               (8, 'Synthwave Dreams', 8, 80, 4),
+                                                                               (9, 'Groove Jam', 9, 75, 5),
+                                                                               (10, 'Dark Soundscapes', 10, 90, 5),
+                                                                               (11, 'Hypnotic Journey', 11, 95, 6),
+                                                                               (12, 'Neon Nights', 12, 85, 6),
+                                                                               (13, 'Night Bassline', 13, 90, 7),
+                                                                               (14, 'Pulse Driver', 14, 105, 7);
 
 
 INSERT INTO `soiree2spectacle` (id_spectacle, id_soiree) VALUES
