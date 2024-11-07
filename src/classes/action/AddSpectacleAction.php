@@ -10,7 +10,6 @@ class AddSpectacleAction extends Action {
         $repo = NRVRepository::getInstance();
         $spectacles = $repo->getAllSpectacles();
 
-        // Vérifie si le formulaire a été soumis
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['spectacle_id'], $_POST['soiree_id'])) {
             try {
                 $spectacleId = (int)$_POST['spectacle_id'];
