@@ -13,7 +13,8 @@ class User{
     protected $password;
     protected $role;
 
-    public function __construct($email , $nom, $role){
+    public function __construct(int $id ,string $email , string $nom, int $role){
+        $this->id = $id;
         $this->name = $nom;
         $this->email = $email;
         $this->role = $role;

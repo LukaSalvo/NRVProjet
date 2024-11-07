@@ -45,13 +45,13 @@ class NRVRepository{
     }
 
     public function getUserByEmail(string $email): ?array {
-        $stmt = $this->pdo->prepare("SELECT * FROM user WHERE adresseMailUtilisateur = :email");
+        $stmt = $this->pdo->prepare("SELECT * FROM user WHERE email = :email");
         $stmt->execute(['email' => $email]);
         return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
     }
     
     public function createUser(string $email, string $username, string $hashedPassword, string $role = 'user'): bool {
-        $stmt = $this->pdo->prepare("INSERT INTO user (adresseMailUtilisateur, nomUtilisateur, mdp, role) VALUES (:email, :username, :password, :role)");
+        $stmt = $this->pdo->prepare("INSERT INTO user (email, nom_user, password, role) VALUES (:email, :username, :password, :role)");
         return $stmt->execute([
             'email' => $email,
             'username' => $username,

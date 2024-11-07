@@ -40,7 +40,7 @@ class LogInAction extends Action {
 
     public function permettreConnexion(): string {
         $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
-        $password = filter_var($_POST['password'], FILTER_SANITIZE_STRING);
+        $password = filter_var($_POST['password'], FILTER_SANITIZE_SPECIAL_CHARS);
 
         // Vérification de l'email
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
