@@ -3,7 +3,7 @@
 namespace iutnc\nrv\repository;
 
 use PDO;
-use iutnc\deefy\repository\DeefyRepository;
+
 use iutnc\nrv\exception\InvalidPropertyNameException;
 
 class NRVRepository {

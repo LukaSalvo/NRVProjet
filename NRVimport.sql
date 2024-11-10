@@ -88,8 +88,8 @@ INSERT INTO lieu (id_lieu ,nom_lieu, adresse,code_postal, nb_place) VALUES
 
 
 INSERT INTO `user` (nom_user, email, password, role) VALUES
-                                                         ('Festival Staff', 'staff@nrvfest.com', 'password123', 1),
-                                                         ('Festival Admin', 'admin@nrvfest.com', 'adminpassword', 100);
+                                                         ('Festival Staff', 'staff@nrvfest.com', '$2y$10$CmIT7.YeicNagzBfllIOueUWanZVmT8Y8TzWdh5HkMuh8MbvERNgS', 1),
+                                                         ('Festival Admin', 'admin@nrvfest.com', '$2y$10$v5CLznNLF78cVRBAXzhod.ZAgNS674XiynIJBnzC70fQnaKVrQAp2', 100);
 
 
 INSERT INTO artiste (id_artiste , nom_artiste) VALUES
