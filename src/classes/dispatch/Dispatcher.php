@@ -14,10 +14,8 @@ use iutnc\nrv\action\LogOutAction;
 use iutnc\nrv\action\RegisterAction;
 use iutnc\nrv\action\AddSpectacleAction;
 use iutnc\nrv\action\LikeAction;
-use iutnc\nrv\action\EditSoireeAction;
-use iutnc\nrv\action\CancelSoireeAction;
-use iutnc\nrv\auth\AuthnProvider;
 use iutnc\nrv\auth\Authz;
+use iutnc\nrv\auth\AuthnProvider;
 
 class Dispatcher {
 
@@ -32,12 +30,6 @@ class Dispatcher {
             case 'addSoiree':
                 $action = new AddSoireeAction();
                 break;
-            case 'editSoiree':
-                $action = new EditSoireeAction();
-                break;
-            case 'cancelSoiree':
-                $action = new CancelSoireeAction();
-                break;
             case 'login':
                 $action = new LogInAction();
                 break;
@@ -45,7 +37,7 @@ class Dispatcher {
                 $action = new RegisterAction();
                 break;
             case 'logout':
-                $action = new LogOutAction();
+                $action = new LogoutAction();
                 break;
             case 'addSpectacle':
                 $action = new AddSpectacleAction();
@@ -75,15 +67,18 @@ class Dispatcher {
 
     public function renderPage(string $res): void
     {
-        {
-            $user = null;
+        $user = null;
+        $isAdmin = false;  // Définition initiale de $isAdmin
 
-            if (isset($_SESSION['user'])) {
-                try {
-                    $user = unserialize($_SESSION['user']);
-                } catch (Exception $e) {
-                }
+        if (isset($_SESSION['user'])) {
+            try {
+                $user = unserialize($_SESSION['user']);
+                $authz = new Authz($user);
+                $isAdmin = $authz->isAdmin();  // Vérifie si l'utilisateur est admin
+            } catch (\Exception $e) {
+                // Gestion des exceptions si nécessaire
             }
+        }
 
             $output = '
             <html>
@@ -103,24 +98,22 @@ class Dispatcher {
         if ($user !== null) {
             $output .= '<a href="?action=logout">Se Déconnecter</a>
                         <a href="?action=filterByLocation">Depuis une localisation</a>';
-            
             if ($isAdmin) {
-                $output .= '<a href="?action=addSoiree">Ajouter une soirée</a>
-                            <a href="?action=editSoiree">Modifier une soirée</a>
-                            <a href="?action=cancelSoiree">Annuler une soirée</a>';
+                $output .= '<a href="?action=addSoiree">Ajouter une Soirée</a>';
+                $output .= '<a href="?action=addSpectacle">Ajouter un Spectacle</a>';
             }
         } else {
             $output .= '
-                <a href="?action=login">Connexion</a>
-                <a href="?action=register">Inscription</a>';
+             <a href="?action=login">Connexion</a>
+             <a href="?action=register">Inscription</a>';
         }
 
         $output .= '
             </nav>
             <main>' . $res . '</main>
-            <footer>
-                <p>&copy; 2023 NRVFestival. Tous droits réservés.</p>
-            </footer>
+        <footer>
+            <p>&copy; 2023 NRVFestival. Tous droits réservés.</p>
+        </footer>
         </body>
         </html>';
 
