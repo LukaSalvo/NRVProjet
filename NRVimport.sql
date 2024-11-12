@@ -37,6 +37,7 @@ CREATE TABLE `soiree` (
 	`nom_soiree` VARCHAR(100) NOT NULL,
 	`id_lieu` INT NOT NULL,
 	`date` DATE NOT NULL,
+    `annuler` TINYINT(1) NOT NULL DEFAULT 1,
 	PRIMARY KEY(`id_soiree`),
 	FOREIGN KEY (`id_lieu`) REFERENCES `lieu`(`id_lieu`)
 );
@@ -129,19 +130,19 @@ INSERT INTO `style` (id_style,nom_style) VALUES
 
 
 
-INSERT INTO `soiree` (id_soiree , nom_soiree,id_lieu, date) VALUES
-                                    (1, 'Rock Fest', 1, '2024-06-01'),
-                                      (2, 'Electro Vibes', 2, '2024-06-02'),
-                                      (3, 'Metal Mania', 3, '2024-06-03'),
-                                      (4, 'Jazz Night', 1, '2024-06-04'),
-                                      (5, 'Indie Sounds', 2, '2024-06-05'),
-                                      (6, 'Pop Parade', 3, '2024-06-06'),
-                                      (7, 'Acoustic Evening', 1, '2024-06-07'),
-                                      (8, 'Reggae Groove', 2, '2024-06-08'),
-                                      (9, 'Classical Harmonies', 3, '2024-06-09'),
-                                      (10, 'Folk Fest', 1, '2024-06-10'),
-                                      (11, 'Hip Hop Beats', 2, '2024-06-11'),
-                                      (12, 'Dancefloor Fever', 3, '2024-06-12');
+INSERT INTO `soiree` (id_soiree , nom_soiree, id_lieu, date, annuler) VALUES
+                                                                          (1, 'Rock Fest', 1, '2024-06-01', 1),
+                                                                          (2, 'Electro Vibes', 2, '2024-06-02', 1),
+                                                                          (3, 'Metal Mania', 3, '2024-06-03', 1),
+                                                                          (4, 'Jazz Night', 1, '2024-06-04', 1),
+                                                                          (5, 'Indie Sounds', 2, '2024-06-05', 1),
+                                                                          (6, 'Pop Parade', 3, '2024-06-06', 1),
+                                                                          (7, 'Acoustic Evening', 1, '2024-06-07', 1),
+                                                                          (8, 'Reggae Groove', 2, '2024-06-08', 1),
+                                                                          (9, 'Classical Harmonies', 3, '2024-06-09', 1),
+                                                                          (10, 'Folk Fest', 1, '2024-06-10', 1),
+                                                                          (11, 'Hip Hop Beats', 2, '2024-06-11', 1),
+                                                                          (12, 'Dancefloor Fever', 3, '2024-06-12', 1);
 
 
 
