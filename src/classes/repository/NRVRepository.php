@@ -85,21 +85,24 @@ class NRVRepository {
         $stmt = $this->pdo->prepare("
             SELECT spectacle.nomSpec, style.nom_style AS style, spectacle.duree 
             FROM soiree2spectacle
-            INNER JOIN spectacle ON soiree2spectacle.id_spectacle = spectacle.id_spectacle
-            INNER JOIN style ON spectacle.id_style = style.id_style
+            JOIN spectacle ON soiree2spectacle.id_spectacle = spectacle.id_spectacle
+            JOIN style ON spectacle.id_style = style.id_style
             WHERE soiree2spectacle.id_soiree = :soireeId
         ");
         $stmt->execute(['soireeId' => $soireeId]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-
+    
 
     public function getAllSpectacles(): array {
-        $stmt = $this->pdo->query("SELECT id_spectacle, nomSpec, duree FROM spectacle
-                                    INNER JOIN style ON spectacle.id_style = style.id_style");
-
+        $stmt = $this->pdo->query("
+            SELECT spectacle.id_spectacle, spectacle.nomSpec, style.nom_style AS style, spectacle.duree 
+            FROM spectacle 
+            JOIN style ON spectacle.id_style = style.id_style
+        ");
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    
     
 
     public function addSpectacleToSoiree(int $spectacleId, int $soireeId): bool {
