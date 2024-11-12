@@ -52,4 +52,8 @@ class Authz {
     public function isAdmin(): bool {
         return $this->hasRole(100); // Supposons que le rôle d'administrateur est 100
     }
+
+    public function getAuthenticatedUser(): User {
+        return $this->authenticated_user;
+    }
 }
