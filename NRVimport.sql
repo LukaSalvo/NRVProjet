@@ -125,14 +125,8 @@ INSERT INTO `style` (id_style,nom_style) VALUES
                                     (4,'Acid'),
                                     (5,'Electronic'),
                                     (6,'Metal'),
-                                    (7,'Blues'),
-                                    (8,'Synthwave'),
-                                    (9,'Funk'),
-                                    (10,'Darkwave'),
-                                    (11,'Trance'),
-                                    (12,'Electro'),
-                                    (13,'House'),
-                                    (14,'Drum and Bass');
+                                    (7,'Blues');
+
 
 
 INSERT INTO `soiree` (id_soiree , nom_soiree,id_lieu, date) VALUES
@@ -160,13 +154,13 @@ INSERT INTO spectacle (id_spectacle, nomSpec, id_style, duree , id_soiree) VALUE
                                                                                (5, 'Electric Night', 5, 85, 3),
                                                                                (6, 'Metal Scream', 6, 110, 3),
                                                                                (7, 'Blue Fusion', 7, 90, 4),
-                                                                               (8, 'Synthwave Dreams', 8, 80, 4),
-                                                                               (9, 'Groove Jam', 9, 75, 5),
-                                                                               (10, 'Dark Soundscapes', 10, 90, 5),
-                                                                               (11, 'Hypnotic Journey', 11, 95, 6),
-                                                                               (12, 'Neon Nights', 12, 85, 6),
-                                                                               (13, 'Night Bassline', 13, 90, 7),
-                                                                               (14, 'Pulse Driver', 14, 105, 7);
+                                                                               (8, 'Synthwave Dreams', 1, 80, 4),
+                                                                               (9, 'Groove Jam', 2, 75, 5),
+                                                                               (10, 'Dark Soundscapes', 3, 90, 5),
+                                                                               (11, 'Hypnotic Journey', 4, 95, 6),
+                                                                               (12, 'Neon Nights', 5, 85, 6),
+                                                                               (13, 'Night Bassline', 6, 90, 7),
+                                                                               (14, 'Pulse Driver', 7, 105, 7);
 
 
 INSERT INTO `soiree2spectacle` (id_spectacle, id_soiree) VALUES
