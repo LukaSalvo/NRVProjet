@@ -87,7 +87,7 @@ class Dispatcher {
                 <title>Deefy App</title> 
 
                 <title>Deefy App</title>
-                <link rel="stylesheet" href="style/style.css"> 
+                
 
             </head>
             <body>
