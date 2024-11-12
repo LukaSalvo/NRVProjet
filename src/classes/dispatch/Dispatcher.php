@@ -2,6 +2,7 @@
 
 namespace iutnc\nrv\dispatch;
 
+use iutnc\nrv\action\EditSoireeListAction;
 use iutnc\nrv\action\AddSoireeAction;
 use iutnc\nrv\action\DefaultAction;
 use iutnc\nrv\action\DisplaySoireeAction;
@@ -57,7 +58,7 @@ class Dispatcher {
             case 'like':
                 $action = new LikeAction();
                 break;
-            case 'editSoireeList':  
+            case 'editSoireeList':
                 $action = new EditSoireeListAction();
                 break;
             default:
