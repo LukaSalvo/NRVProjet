@@ -79,6 +79,15 @@ CREATE TABLE `soiree2spectacle` (
 	FOREIGN KEY (`id_spectacle`) REFERENCES `spectacle`(`id_spectacle`)
 );
 
+DROP TABLE IF EXISTS `user2spectacleLike`;	
+Create table `user2spectacleLike`(
+    `id_user` INT NOT NULL,
+    `id_spectacle` INT NOT NULL,
+    PRIMARY KEY (`id_user`,`id_spectacle`),
+    FOREIGN KEY (`id_user`) REFERENCES `user`(`id_user`),
+    FOREIGN KEY (`id_spectacle`) REFERENCES `spectacle`(`id_spectacle`)
+    );
+
 
 
 INSERT INTO lieu (id_lieu ,nom_lieu, adresse,code_postal, nb_place) VALUES
