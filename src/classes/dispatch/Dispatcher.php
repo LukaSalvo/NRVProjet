@@ -12,6 +12,7 @@ use iutnc\nrv\action\LogInAction;
 use iutnc\nrv\action\LogOutAction;
 use iutnc\nrv\action\RegisterAction;
 use iutnc\nrv\action\AddSpectacleAction;
+use iutnc\nrv\auth\Authz;
 
 class Dispatcher {
 
@@ -81,11 +82,11 @@ class Dispatcher {
             </head>
             <body>
                 <nav>
-                    <a href="?action=default">Accueil</a>
+                    <a href="?action=default">Accueil</a>        
                     <a href="?action=addSoiree">Soiree</a>';
 
             if ($user !== null) {
-                $output .= '<a href =?action=logout>Se Deconnecter</a>';
+                $output .= '<a href =?action=logout> Se Deconnecter</a>';
             } else {
                 $output .= '
              <a href = "?action=login">Connexion</a>

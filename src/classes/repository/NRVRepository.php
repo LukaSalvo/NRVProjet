@@ -67,12 +67,16 @@ class NRVRepository {
     }
 
     public function getAllSoirees(): array {
-        $stmt = $this->pdo->query("SELECT soiree.id_soiree, lieu.nom_lieu, soiree.date FROM soiree JOIN lieu ON soiree.id_lieu = lieu.id_lieu");
+        $stmt = $this->pdo->query("SELECT soiree.id_soiree, soiree.nom_soiree, lieu.nom_lieu, soiree.date 
+                               FROM soiree 
+                               INNER JOIN lieu ON soiree.id_lieu = lieu.id_lieu");
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+
+
     public function getSoireeById(int $id): ?array {
-        $stmt = $this->pdo->prepare("SELECT soiree.id_soiree, lieu.nom_lieu, soiree.date FROM soiree JOIN lieu ON soiree.id_lieu = lieu.id_lieu WHERE soiree.id_soiree = :id");
+        $stmt = $this->pdo->prepare("SELECT soiree.id_soiree, lieu.nom_lieu, lieu.nb_places, soiree.date FROM soiree JOIN lieu ON soiree.id_lieu = lieu.id_lieu WHERE soiree.id_soiree = :id");
         $stmt->execute(['id' => $id]);
         return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
     }
@@ -86,7 +90,9 @@ class NRVRepository {
     }
 
     public function getAllSpectacles(): array {
-        $stmt = $this->pdo->query("SELECT id_spectacle, nomSpec, style, duree FROM spectacle");
+        $stmt = $this->pdo->query("SELECT id_spectacle, nomSpec, duree, style.nom_style AS style  FROM spectacle
+                               INNER JOIN style ON spectacle.id_style = style.id_style");
+
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
