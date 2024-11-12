@@ -3,28 +3,37 @@
 namespace iutnc\nrv\action;
 
 use iutnc\nrv\auth\Authz;
+use iutnc\nrv\auth\AuthnProvider;
 use iutnc\nrv\festival\Soiree;
 use iutnc\nrv\festival\Lieu;
 use iutnc\nrv\repository\NRVRepository;
 
 class AddSoireeAction extends Action {
 
-    public function execute() : string {
-        // Vérifie si l'utilisateur est un administrateur
-        if (!isset($_SESSION['user']) || !Authz::isAdmin($_SESSION['user']['id_user'])) {
-            return "<p>Accès refusé : vous n'avez pas les droits nécessaires pour accéder à cette page.</p>";
+    public function execute(): string {
+        // Récupère l'utilisateur connecté
+        try {
+            $currentUser = AuthnProvider::getSignedInUser();
+            $authz = new Authz($currentUser);
+
+            // Vérifie si l'utilisateur est un administrateur
+            if (!$authz->isAdmin()) {
+                return "<p>Accès refusé : vous n'avez pas les droits nécessaires pour accéder à cette page.</p>";
+            }
+
+        } catch (\Exception $e) {
+            return "<p>Erreur : " . $e->getMessage() . "</p>";
         }
 
         // Affiche le formulaire ou traite la requête POST
-        if($_SERVER['REQUEST_METHOD']=== 'GET'){
+        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             $_SESSION['soiree'] = [];
             return $this->displayForm();
-        }
-        else {
+        } else {
             return $this->addSoiree();
         }
     }
-    
+
     private function displayForm(): string {
         return '
         <!DOCTYPE html>
@@ -57,36 +66,36 @@ class AddSoireeAction extends Action {
         </html>';
     }
 
-    private function addSoiree() : string {
+    private function addSoiree(): string {
         $nom = filter_var($_POST['nom'], FILTER_SANITIZE_SPECIAL_CHARS);
         $date = filter_var($_POST['date'], FILTER_SANITIZE_SPECIAL_CHARS);
         $lieu = filter_var($_POST['lieu'], FILTER_SANITIZE_SPECIAL_CHARS);
         $nb_place = filter_var($_POST['nb_place'], FILTER_SANITIZE_NUMBER_INT);
         $nom_emplacement = filter_var($_POST['nom_emplacement'], FILTER_SANITIZE_SPECIAL_CHARS);
         $code_postal = filter_var($_POST['code_postal'], FILTER_SANITIZE_NUMBER_INT);
-        
+
         // Appel à la base de données pour ajouter la soirée
         NRVRepository::setConfig(__DIR__ . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "config" . DIRECTORY_SEPARATOR . "db.config.ini");
         $repository = NRVRepository::getInstance();
         $pdo = $repository->getPDO();
-        
+
         $LieuSoiree = new Lieu($nb_place, $nom_emplacement, $lieu, $code_postal);
         $soiree = new Soiree($nom, $date);
         $soiree->setLieu($LieuSoiree);
-        
+
         $_SESSION['soiree'] = serialize($soiree);
-        
+
         // Insertion du lieu
         $inser1 = $pdo->prepare("INSERT INTO lieu (nom_lieu, adresse, nb_place) VALUES (:nom_lieu, :adresse, :nb_place)");
         $inser1->execute(['nom_lieu' => $lieu, 'adresse' => $nom_emplacement, 'nb_place' => $nb_place]);
-        
+
         // Récupération de l'ID du lieu inséré
         $id_lieu = $pdo->lastInsertId();
-        
+
         // Insertion de la soirée avec l'ID du lieu
         $inser2 = $pdo->prepare("INSERT INTO soiree (nom_soiree, id_lieu, date) VALUES (:nom_soiree, :id_lieu, :date)");
         $inser2->execute(['nom_soiree' => $nom, 'id_lieu' => $id_lieu, 'date' => $date]);
-        
+
         return 'Soirée ajoutée avec succès';
     }
 }

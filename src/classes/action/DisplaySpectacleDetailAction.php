@@ -18,20 +18,20 @@ class DisplaySpectacleDetailAction extends Action {
                 return "<p>Spectacle non trouvé.</p>";
             }
 
+            // Affichage des informations principales du spectacle
             $output = "
             <h2>{$spectacle['nomSpec']}</h2>
             <p><strong>Style :</strong> {$spectacle['style']}</p>
             <p><strong>Durée :</strong> {$spectacle['duree']} minutes</p>
-            <p><strong>Description :</strong> {$spectacle['description']}</p>
             <h3>Artistes</h3>
             <ul>";
 
             foreach ($artists as $artist) {
                 $output .= "<li>{$artist['nom_artiste']}</li>";
             }
-
             $output .= "</ul>";
 
+            // Suggestions de spectacles similaires
             $similarByDate = $repo->getSpectaclesByDate($spectacle['date'], $spectacleId);
             $similarByLocation = $repo->getSpectaclesByLocation($spectacle['nom_lieu'], $spectacleId);
             $similarByStyle = $repo->getSpectaclesByStyle($spectacle['style'], $spectacleId);

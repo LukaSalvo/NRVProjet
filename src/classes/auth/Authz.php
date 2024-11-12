@@ -10,8 +10,13 @@ class Authz {
 
     private User $authenticated_user;
 
-    public function __construct(User $user) {
-        $this->authenticated_user = $user;
+    public function __construct(?User $user = null) {
+        // Récupère l'utilisateur de session s'il n'est pas fourni
+        if ($user === null) {
+            $this->authenticated_user = AuthnProvider::getSignedInUser();
+        } else {
+            $this->authenticated_user = $user;
+        }
     }
 
     /**
@@ -34,7 +39,7 @@ class Authz {
             }
 
             return false;
-        } catch (PDOException $e) {
+        } catch (\PDOException $e) {
             throw new AuthnException("Erreur lors de la vérification du rôle de l'utilisateur.");
         }
     }

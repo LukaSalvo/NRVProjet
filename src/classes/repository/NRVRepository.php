@@ -78,17 +78,27 @@ class NRVRepository {
     }
 
     public function findSpectaclesBySoireeId(int $soireeId): array {
-        $stmt = $this->pdo->prepare("SELECT spectacle.nomSpec, spectacle.style, spectacle.duree FROM soiree2spectacle 
-                                     JOIN spectacle ON soiree2spectacle.id_spectacle = spectacle.id_spectacle 
-                                     WHERE soiree2spectacle.id_soiree = :soireeId");
+        $stmt = $this->pdo->prepare("
+            SELECT spectacle.nomSpec, style.nom_style AS style, spectacle.duree 
+            FROM soiree2spectacle
+            JOIN spectacle ON soiree2spectacle.id_spectacle = spectacle.id_spectacle
+            JOIN style ON spectacle.id_style = style.id_style
+            WHERE soiree2spectacle.id_soiree = :soireeId
+        ");
         $stmt->execute(['soireeId' => $soireeId]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    
 
     public function getAllSpectacles(): array {
-        $stmt = $this->pdo->query("SELECT id_spectacle, nomSpec, style, duree FROM spectacle");
+        $stmt = $this->pdo->query("
+            SELECT spectacle.id_spectacle, spectacle.nomSpec, style.nom_style AS style, spectacle.duree 
+            FROM spectacle
+            JOIN style ON spectacle.id_style = style.id_style
+        ");
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    
 
     public function addSpectacleToSoiree(int $spectacleId, int $soireeId): bool {
         $stmt = $this->pdo->prepare("INSERT INTO soiree2spectacle (id_soiree, id_spectacle) VALUES (:soireeId, :spectacleId)");
@@ -99,68 +109,117 @@ class NRVRepository {
         return $this->pdo;
     }
 
-    public function getSpectaclesByDate(string $date): array {
-        $stmt = $this->pdo->prepare("
-            SELECT spectacle.id_spectacle, spectacle.nomSpec, spectacle.style, spectacle.duree 
-            FROM spectacle 
-            JOIN soiree2spectacle ON spectacle.id_spectacle = soiree2spectacle.id_spectacle 
-            JOIN soiree ON soiree2spectacle.id_soiree = soiree.id_soiree 
-            WHERE soiree.date = :date
-        ");
-        $stmt->execute(['date' => $date]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-    
-
-    public function getSpectaclesByStyle(string $style): array {
-        $stmt = $this->pdo->prepare("
-            SELECT spectacle.id_spectacle, spectacle.nomSpec, style.nom_style AS style, spectacle.duree 
-            FROM spectacle 
-            JOIN style ON spectacle.id_style = style.id_style 
-            WHERE style.nom_style = :style
-        ");
-        $stmt->execute(['style' => $style]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-    
-
-    public function getSpectaclesByLocation(string $location): array {
-        $stmt = $this->pdo->prepare("
+    public function getSpectaclesByDate(string $date, int $excludeId = null): array {
+        $query = "
             SELECT spectacle.id_spectacle, spectacle.nomSpec, style.nom_style AS style, spectacle.duree 
             FROM spectacle
             JOIN style ON spectacle.id_style = style.id_style
             JOIN soiree2spectacle ON spectacle.id_spectacle = soiree2spectacle.id_spectacle
             JOIN soiree ON soiree2spectacle.id_soiree = soiree.id_soiree
-            JOIN lieu ON soiree.id_lieu = lieu.id_lieu 
-            WHERE lieu.nom_lieu = :location
-        ");
-        $stmt->execute(['location' => $location]);
+            WHERE soiree.date = :date
+        ";
+    
+        // Ajout de la condition d'exclusion si $excludeId est fourni
+        if ($excludeId !== null) {
+            $query .= " AND spectacle.id_spectacle != :excludeId";
+        }
+    
+        $stmt = $this->pdo->prepare($query);
+    
+        // Prépare les paramètres pour l'exécution
+        $params = ['date' => $date];
+        if ($excludeId !== null) {
+            $params['excludeId'] = $excludeId;
+        }
+    
+        $stmt->execute($params);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     
     
+    public function getSpectaclesByLocation(string $location, int $excludeId = null): array {
+        $query = "
+            SELECT spectacle.id_spectacle, spectacle.nomSpec, style.nom_style AS style, spectacle.duree 
+            FROM spectacle
+            JOIN style ON spectacle.id_style = style.id_style
+            JOIN soiree2spectacle ON spectacle.id_spectacle = soiree2spectacle.id_spectacle
+            JOIN soiree ON soiree2spectacle.id_soiree = soiree.id_soiree
+            JOIN lieu ON soiree.id_lieu = lieu.id_lieu
+            WHERE lieu.nom_lieu = :location
+        ";
     
-
+        // Ajout de la condition d'exclusion si $excludeId est fourni
+        if ($excludeId !== null) {
+            $query .= " AND spectacle.id_spectacle != :excludeId";
+        }
+    
+        $stmt = $this->pdo->prepare($query);
+    
+        // Exécuter la requête avec ou sans l'exclusion d'ID
+        $params = ['location' => $location];
+        if ($excludeId !== null) {
+            $params['excludeId'] = $excludeId;
+        }
+    
+        $stmt->execute($params);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
+    
+    public function getSpectaclesByStyle(string $style, int $excludeId = null): array {
+        $query = "
+            SELECT spectacle.id_spectacle, spectacle.nomSpec, style.nom_style AS style, spectacle.duree 
+            FROM spectacle
+            JOIN style ON spectacle.id_style = style.id_style 
+            WHERE style.nom_style = :style
+        ";
+    
+        // Ajout de la condition d'exclusion si $excludeId est fourni
+        if ($excludeId !== null) {
+            $query .= " AND spectacle.id_spectacle != :excludeId";
+        }
+    
+        $stmt = $this->pdo->prepare($query);
+    
+        // Préparation des paramètres pour l'exécution
+        $params = ['style' => $style];
+        if ($excludeId !== null) {
+            $params['excludeId'] = $excludeId;
+        }
+    
+        $stmt->execute($params);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
+    
     public function getSpectacleById(int $id): ?array {
         $stmt = $this->pdo->prepare("
-            SELECT spectacle.id_spectacle, spectacle.nomSpec, style.nom_style AS style, spectacle.duree, spectacle.description, soiree.date, lieu.nom_lieu 
-            FROM spectacle 
+            SELECT spectacle.id_spectacle, spectacle.nomSpec, style.nom_style AS style, spectacle.duree, soiree.date, lieu.nom_lieu 
+            FROM spectacle
             JOIN style ON spectacle.id_style = style.id_style
-            JOIN soiree2spectacle ON spectacle.id_spectacle = soiree2spectacle.id_spectacle 
-            JOIN soiree ON soiree2spectacle.id_soiree = soiree.id_soiree 
-            JOIN lieu ON soiree.id_lieu = lieu.id_lieu 
+            JOIN soiree2spectacle ON spectacle.id_spectacle = soiree2spectacle.id_spectacle
+            JOIN soiree ON soiree2spectacle.id_soiree = soiree.id_soiree
+            JOIN lieu ON soiree.id_lieu = lieu.id_lieu
             WHERE spectacle.id_spectacle = :id
         ");
         $stmt->execute(['id' => $id]);
         return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
     }
     
+    
+    
 
     public function getArtistsBySpectacleId(int $spectacleId): array {
-        $stmt = $this->pdo->prepare("SELECT artiste.nom_artiste FROM artiste JOIN spectable2artiste ON artiste.id_artiste = spectable2artiste.id_artiste WHERE spectable2artiste.id_spectacle = :spectacleId");
+        $stmt = $this->pdo->prepare("
+            SELECT artiste.nom_artiste 
+            FROM artiste 
+            JOIN spectacle2artiste ON artiste.id_artiste = spectacle2artiste.id_artiste 
+            WHERE spectacle2artiste.id_spectacle = :spectacleId
+        ");
         $stmt->execute(['spectacleId' => $spectacleId]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    
 
     public function getAllStyles(): array {
         $stmt = $this->pdo->query("SELECT nom_style FROM style");

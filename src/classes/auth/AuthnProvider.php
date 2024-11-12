@@ -91,11 +91,13 @@ class AuthnProvider {
     }
 
     public static function getSignedInUser(): User {
-        $user = unserialize($_SESSION['user']);
-        if ($user) {
-            return $user;
-        } else {
-            throw new \Exception("Utilisateur inconnu");
+        if (isset($_SESSION['user'])) {
+            $user = unserialize($_SESSION['user']);
+            if ($user instanceof User) {
+                return $user;
+            }
         }
+        throw new \Exception("Utilisateur inconnu ou non connecté.");
     }
+    
 }
