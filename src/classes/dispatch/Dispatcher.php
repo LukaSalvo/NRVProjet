@@ -79,7 +79,7 @@ class Dispatcher {
             <html>
             <head>
                 <title>Deefy App</title>
-                <link rel="stylesheet" href="style/style.css"> 
+                <link rel="stylesheet" href=""> 
             </head>
             <body>
                 <nav>
