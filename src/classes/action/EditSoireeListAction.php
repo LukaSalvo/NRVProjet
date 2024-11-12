@@ -6,7 +6,7 @@ use iutnc\nrv\repository\NRVRepository;
 use iutnc\nrv\auth\AuthnProvider;
 use iutnc\nrv\auth\Authz;
 
-class EditSoireesListAction extends Action {
+class EditSoireeListAction extends Action {
 
     public function execute(): string {
         // Vérifie que l'utilisateur est connecté et est administrateur

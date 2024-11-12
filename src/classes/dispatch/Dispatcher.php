@@ -105,7 +105,7 @@ class Dispatcher {
             if ($isAdmin) {
                 $output .= '<a href="?action=addSoiree">Ajouter une Soirée</a>';
                 $output .= '<a href="?action=addSpectacle">Ajouter un Spectacle</a>';
-                $output .= '<a href="?action=editSoireesList">Modifier ou Annuler une Soirée</a>';
+                $output .= '<a href="?action=editSoireeList">Modifier ou Annuler une Soirée</a>';
             }
             
         } else {
