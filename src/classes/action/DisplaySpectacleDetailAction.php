@@ -40,6 +40,12 @@ class DisplaySpectacleDetailAction extends Action {
             $output .= $this->renderSimilarSection("Autres spectacles au même lieu", $similarByLocation);
             $output .= $this->renderSimilarSection("Autres spectacles du même style", $similarByStyle);
 
+            // Ajout du bouton de retour à l'accueil
+            $output .= '
+            <form action="index.php" method="get">
+                <button type="submit" name="action" value="default">Retour à l\'accueil</button>
+            </form>';
+
             return $output;
 
         } else {
