@@ -2,6 +2,7 @@
 
 namespace iutnc\nrv\action;
 
+use iutnc\nrv\auth\Authz;
 use iutnc\nrv\festival\Soiree;
 use iutnc\nrv\festival\Lieu;
 use iutnc\nrv\repository\NRVRepository;
@@ -9,6 +10,12 @@ use iutnc\nrv\repository\NRVRepository;
 class AddSoireeAction extends Action {
 
     public function execute() : string {
+        // Vérifie si l'utilisateur est un administrateur
+        if (!isset($_SESSION['user']) || !Authz::isAdmin($_SESSION['user']['id_user'])) {
+            return "<p>Accès refusé : vous n'avez pas les droits nécessaires pour accéder à cette page.</p>";
+        }
+
+        // Affiche le formulaire ou traite la requête POST
         if($_SERVER['REQUEST_METHOD']=== 'GET'){
             $_SESSION['soiree'] = [];
             return $this->displayForm();
@@ -17,8 +24,6 @@ class AddSoireeAction extends Action {
             return $this->addSoiree();
         }
     }
-
-    
     
     private function displayForm(): string {
         return '
