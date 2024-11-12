@@ -106,7 +106,10 @@ class NRVRepository {
     }
 
     public function getSpectaclesByStyle(string $style, int $excludeSpectacleId = null): array {
-        $query = "SELECT id_spectacle, nomSpec, style, duree FROM spectacle WHERE style = :style";
+        $query = "SELECT spectacle.id_spectacle, spectacle.nomSpec, style.nom_style, spectacle.duree 
+        FROM spectacle
+        INNER JOIN style ON spectacle.id_style = style.id_style
+        WHERE style.nom_style = :styleName";
         
         if ($excludeSpectacleId !== null) {
             $query .= " AND id_spectacle != :excludeId";
@@ -125,9 +128,9 @@ class NRVRepository {
 
     public function getSpectaclesByLocation(string $location, int $excludeSpectacleId = null): array {
         $query = "SELECT id_spectacle, nomSpec, style, duree FROM spectacle 
-                  JOIN soiree2spectacle ON spectacle.id_spectacle = soiree2spectacle.id_spectacle 
-                  JOIN soiree ON soiree2spectacle.id_soiree = soiree.id_soiree 
-                  JOIN lieu ON soiree.id_lieu = lieu.id_lieu 
+                  INNER JOIN soiree2spectacle ON spectacle.id_spectacle = soiree2spectacle.id_spectacle 
+                  INNER JOIN soiree ON soiree2spectacle.id_soiree = soiree.id_soiree 
+                  INNER JOIN lieu ON soiree.id_lieu = lieu.id_lieu 
                   WHERE lieu.nom_lieu = :location";
                   
         if ($excludeSpectacleId !== null) {
