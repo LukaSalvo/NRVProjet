@@ -83,16 +83,20 @@ class Dispatcher {
             }
         }
 
-        $output = '
-        <html>
-        <head>
-            <title>Deefy App</title>
-            <link rel="stylesheet" href=""> 
-        </head>
-        <body>
-            <nav>
-                <a href="?action=default">Accueil</a>        
-                <a href="?action=addSoiree">Soiree</a>';
+            $output = '
+            <html>
+            <head>
+
+                <title>NRV RockNRoll</title> 
+
+                
+                
+
+            </head>
+            <body>
+                <nav>
+                    <a href="?action=default">Accueil</a>        
+                    <a href="?action=addSoiree">Soiree</a>';
 
         if ($user !== null) {
             $output .= '<a href="?action=logout">Se Déconnecter</a>
