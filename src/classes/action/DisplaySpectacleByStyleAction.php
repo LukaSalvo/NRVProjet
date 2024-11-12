@@ -9,6 +9,9 @@ class DisplaySpectacleByStyleAction extends Action {
     public function execute(): string {
         $repo = NRVRepository::getInstance();
 
+        // Récupère tous les styles distincts pour le menu déroulant
+        $styles = $repo->getAllStyles();
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['style'])) {
             $style = $_POST['style'];
             $spectacles = $repo->getSpectaclesByStyle($style);
@@ -21,10 +24,18 @@ class DisplaySpectacleByStyleAction extends Action {
             return $output;
 
         } else {
+            // Génère les options du menu déroulant pour chaque style
+            $styleOptions = '';
+            foreach ($styles as $style) {
+                $styleOptions .= "<option value='{$style['style']}'>{$style['style']}</option>";
+            }
+
             return <<<HTML
                 <form method="POST" action="?action=filterByStyle">
                     <label for="style">Sélectionner un style :</label>
-                    <input type="text" id="style" name="style" required>
+                    <select id="style" name="style" required>
+                        $styleOptions
+                    </select>
                     <button type="submit">Filtrer</button>
                 </form>
             HTML;
