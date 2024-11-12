@@ -57,6 +57,9 @@ class Dispatcher {
             case 'like':
                 $action = new LikeAction();
                 break;
+            case 'editSoireeList':  
+                $action = new EditSoireeListAction();
+                break;
             default:
                 $action = new DefaultAction();
                 break;
@@ -97,7 +100,9 @@ class Dispatcher {
             if ($isAdmin) {
                 $output .= '<a href="?action=addSoiree">Ajouter une Soirée</a>';
                 $output .= '<a href="?action=addSpectacle">Ajouter un Spectacle</a>';
+                $output .= '<a href="?action=editSoireesList">Modifier ou Annuler une Soirée</a>';
             }
+            
         } else {
             $output .= '
              <a href="?action=login">Connexion</a>

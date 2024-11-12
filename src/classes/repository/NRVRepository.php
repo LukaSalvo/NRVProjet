@@ -248,28 +248,14 @@ class NRVRepository {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function updateSoiree(int $soireeId, string $nom, string $date, string $lieu, int $nb_place): void {
-        $stmt = $this->pdo->prepare("
-            UPDATE soiree
-            SET nom_soiree = :nom, date = :date, id_lieu = (
-                SELECT id_lieu FROM lieu WHERE nom_lieu = :lieu
-            )
-            WHERE id_soiree = :id_soiree
-        ");
-        $stmt->execute([
-            'nom' => $nom,
-            'date' => $date,
-            'lieu' => $lieu,
-            'id_soiree' => $soireeId
-        ]);
-    }
-
-    public function cancelSoiree(int $soireeId): void {
-        $stmt = $this->pdo->prepare("UPDATE soiree SET annule = 1 WHERE id_soiree = :id_soiree");
-        $stmt->execute(['id_soiree' => $soireeId]);
+    public function updateSoiree(int $id, string $nom, string $date, string $lieu, int $nb_place): bool {
+        $stmt = $this->pdo->prepare("UPDATE soiree SET nom_soiree = :nom, date = :date, id_lieu = :lieu, nb_place = :nb_place WHERE id_soiree = :id");
+        return $stmt->execute(['id' => $id, 'nom' => $nom, 'date' => $date, 'lieu' => $lieu, 'nb_place' => $nb_place]);
     }
     
-    
-    
+    public function cancelSoiree(int $id): bool {
+        $stmt = $this->pdo->prepare("UPDATE soiree SET status = 'annulee' WHERE id_soiree = :id");
+        return $stmt->execute(['id' => $id]);
+    }
     
 }

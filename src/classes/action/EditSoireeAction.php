@@ -2,47 +2,32 @@
 
 namespace iutnc\nrv\action;
 
-use iutnc\nrv\auth\AuthnProvider;
 use iutnc\nrv\auth\Authz;
+use iutnc\nrv\auth\AuthnProvider;
 use iutnc\nrv\repository\NRVRepository;
 
 class EditSoireeAction extends Action {
 
     public function execute(): string {
-        // Récupère l'utilisateur connecté
-        try {
-            $currentUser = AuthnProvider::getSignedInUser();
-            $authz = new Authz($currentUser);
+        $currentUser = AuthnProvider::getSignedInUser();
+        $authz = new Authz($currentUser);
 
-            // Vérifie si l'utilisateur est un administrateur
-            if (!$authz->isAdmin()) {
-                return "<p>Accès refusé : vous n'avez pas les droits nécessaires pour accéder à cette page.</p>";
-            }
-
-        } catch (\Exception $e) {
-            return "<p>Erreur : " . $e->getMessage() . "</p>";
-        }
-
-        // Vérifie si l'ID de la soirée est fourni
-        if (!isset($_GET['id_soiree'])) {
-            return "<p>Erreur : ID de la soirée non fourni.</p>";
+        if (!$authz->isAdmin()) {
+            return "<p>Accès refusé : vous n'avez pas les droits nécessaires pour accéder à cette page.</p>";
         }
 
         $repo = NRVRepository::getInstance();
         $soireeId = (int)$_GET['id_soiree'];
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // Met à jour la soirée avec les nouvelles valeurs du formulaire
-            $nom = filter_var($_POST['nom'], FILTER_SANITIZE_SPECIAL_CHARS);
-            $date = filter_var($_POST['date'], FILTER_SANITIZE_SPECIAL_CHARS);
-            $lieu = filter_var($_POST['lieu'], FILTER_SANITIZE_SPECIAL_CHARS);
+            $nom = $_POST['nom'];
+            $date = $_POST['date'];
+            $lieu = $_POST['lieu'];
             $nb_place = (int)$_POST['nb_place'];
-
             $repo->updateSoiree($soireeId, $nom, $date, $lieu, $nb_place);
             return "<p>Soirée modifiée avec succès !</p>";
         }
 
-        // Affiche le formulaire de modification
         $soiree = $repo->getSoireeById($soireeId);
         return $this->renderForm($soiree);
     }
