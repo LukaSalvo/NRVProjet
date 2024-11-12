@@ -36,9 +36,6 @@ class Dispatcher {
             case 'logout':
                 $action = new LogoutAction();
                 break;
-            case 'displaySoiree':
-                $action = new DisplaySoireeAction();
-                break;
             case 'addSpectacle':
                 $action = new AddSpectacleAction();
                 break;
@@ -55,7 +52,7 @@ class Dispatcher {
                 $action = new DisplaySpectacleDetailAction();
                 break;
             default:
-                $action = new DefaultAction();
+                $action = new DisplaySoireeAction();
                 break;
         }
         $res = $action->execute();

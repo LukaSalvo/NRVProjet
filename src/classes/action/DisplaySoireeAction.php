@@ -57,7 +57,13 @@ class DisplaySoireeAction extends Action {
             foreach ($soirees as $soiree) {
                 $html .= "<li><a href='?action=displaySoiree&id_soiree={$soiree['id_soiree']}'>{$soiree['nom_lieu']} - {$soiree['date']}</a></li>";
             }
-            $html .= "</ul>";
+            $html .= "</ul>"."<div><button class='btt' onclick='window.location.href=\"?action=filterByDate\"'>Filtrer les soirée par date</button></div>
+            <br>
+            <button class='btt' onclick='window.location=\"?action=filterByLocation\"'>Filtrer les soirée par lieu</button></div>
+            <br>
+            <button class='btt' onclick='window.location=\"?action=filterByStyle\"'>Filtrer les soirée par style</button></div>
+            <br>
+            ";
             return $html;
         }
     }
