@@ -113,7 +113,10 @@ class NRVRepository {
     
 
     public function getSpectaclesByStyle(string $style, int $excludeSpectacleId = null): array {
-        $query = "SELECT id_spectacle, nomSpec, style, duree FROM spectacle WHERE style = :style";
+        $query = "SELECT spectacle.id_spectacle, spectacle.nomSpec, style.nom_style, spectacle.duree 
+        FROM spectacle
+        INNER JOIN style ON spectacle.id_style = style.id_style
+        WHERE style.nom_style = :styleName";
         
         if ($excludeSpectacleId !== null) {
             $query .= " AND id_spectacle != :excludeId";
@@ -130,16 +133,25 @@ class NRVRepository {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getSpectaclesByLocation(string $location): array {
-        $stmt = $this->pdo->prepare("
-            SELECT spectacle.id_spectacle, spectacle.nomSpec, spectacle.style, spectacle.duree 
-            FROM spectacle 
-            JOIN soiree2spectacle ON spectacle.id_spectacle = soiree2spectacle.id_spectacle 
-            JOIN soiree ON soiree2spectacle.id_soiree = soiree.id_soiree 
-            JOIN lieu ON soiree.id_lieu = lieu.id_lieu 
-            WHERE lieu.nom_lieu = :location
-        ");
-        $stmt->execute(['location' => $location]);
+    public function getSpectaclesByLocation(string $location, int $excludeSpectacleId = null): array {
+        $query = "SELECT id_spectacle, nomSpec, style, duree FROM spectacle 
+                  JOIN soiree2spectacle ON spectacle.id_spectacle = soiree2spectacle.id_spectacle 
+                  JOIN soiree ON soiree2spectacle.id_soiree = soiree.id_soiree 
+                  JOIN lieu ON soiree.id_lieu = lieu.id_lieu 
+                  WHERE lieu.nom_lieu = :location";
+                  
+        if ($excludeSpectacleId !== null) {
+            $query .= " AND spectacle.id_spectacle != :excludeId";
+        }
+    
+        $stmt = $this->pdo->prepare($query);
+    
+        $params = ['location' => $location];
+        if ($excludeSpectacleId !== null) {
+            $params['excludeId'] = $excludeSpectacleId;
+        }
+    
+        $stmt->execute($params);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     
