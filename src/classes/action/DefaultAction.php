@@ -46,7 +46,7 @@ class DefaultAction extends Action{
             $html .= '<div class="spectacle">
                         <br>
                         <strong>Nom :</strong> ' . htmlspecialchars($spectacle['nomSpec']) . '<br>
-                        <strong>Style :</strong> ' . htmlspecialchars($spectacle['style']) . '<br>
+                        <strong>Style :</strong> ' . htmlspecialchars($spectacle['id_style']) . '<br>
                         <strong>Durée :</strong> ' . htmlspecialchars($spectacle['duree']) . ' min
                       </div>';
         }

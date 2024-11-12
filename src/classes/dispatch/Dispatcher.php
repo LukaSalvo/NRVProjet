@@ -52,7 +52,7 @@ class Dispatcher {
                 $action = new DisplaySpectacleDetailAction();
                 break;
             default:
-                $action = new DisplaySoireeAction();
+                $action = new DefaultAction();
                 break;
         }
         $res = $action->execute();
