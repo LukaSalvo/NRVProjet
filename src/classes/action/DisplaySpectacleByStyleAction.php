@@ -27,7 +27,7 @@ class DisplaySpectacleByStyleAction extends Action {
             // Génère les options du menu déroulant pour chaque style
             $styleOptions = '';
             foreach ($styles as $style) {
-                $styleOptions .= "<option value='{$style['style']}'>{$style['style']}</option>";
+                $styleOptions .= "<option value='{$style['nom_style']}'>{$style['nom_style']}</option>";
             }
 
             return <<<HTML
