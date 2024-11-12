@@ -20,3 +20,4 @@ NRVRepository::setConfig('src/config/db.config.ini');
 
 $dispatcher = new Dispatcher();
 $dispatcher->run();
+

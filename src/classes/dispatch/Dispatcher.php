@@ -75,7 +75,7 @@ class Dispatcher {
             <html>
             <head>
                 <title>Deefy App</title>
-                <link rel="stylesheet" href="src/style/style.css"> 
+                <link rel="stylesheet" href="style/style.css"> 
             </head>
             <body>
                 <nav>
@@ -94,6 +94,9 @@ class Dispatcher {
             $output .= '
                 </nav>
                 <main>' . $res . '</main>
+            <footer>
+                <p>&copy; 2023 NRVFestival. Tous droits réservés.</p>
+            </footer>
             </body>
             </html>';
 

@@ -15,10 +15,12 @@ class LogInAction extends Action {
 
         return <<<HTML
         <h1>Bienvenue sur NRV !</h1>
-        <div>
         <br>
-        <h2>Connexion à NRV</h2>
         <form method="POST" action="?action=login" enctype="multipart/form-data">
+            
+            <div>
+            <br>
+            <h2>Connexion à NRV</h2>
 
             <label for="email">Adresse Mail :</label><br>
             <input type="email" name="email" id="email" required><br><br>
