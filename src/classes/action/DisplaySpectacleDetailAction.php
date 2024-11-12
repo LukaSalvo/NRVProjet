@@ -14,6 +14,9 @@ class DisplaySpectacleDetailAction extends Action {
             $spectacle = $repo->getSpectacleById($spectacleId);
             $artists = $repo->getArtistsBySpectacleId($spectacleId);
 
+            // Stocker l'ID du spectacle en session
+            $_SESSION['current_spectacle_id'] = $spectacleId;
+
             if (!$spectacle) {
                 return "<p>Spectacle non trouvé.</p>";
             }
@@ -46,6 +49,12 @@ class DisplaySpectacleDetailAction extends Action {
                 <button type="submit" name="action" value="default">Retour à l\'accueil</button>
             </form>';
 
+            //Ajout du bouton pour like un spectacle
+            $output .= '
+            <form action="index.php" method="get">
+                <input type="hidden" name="id_spectacle" value="' . $spectacleId . '">
+                <button type="submit" name="action" value="like">Ajouter aux favoris</button>
+            </form>';
             return $output;
 
         } else {
