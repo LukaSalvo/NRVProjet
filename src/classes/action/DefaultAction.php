@@ -49,7 +49,8 @@ class DefaultAction extends Action{
                         <br>
                         <strong>Nom :</strong> ' . htmlspecialchars($spectacle['nomSpec']) . '<br>
                         <strong>Style :</strong> ' . htmlspecialchars($spectacle['style']) . '<br>
-                        <strong>Durée :</strong> ' . htmlspecialchars($spectacle['duree']) . ' min
+                        <strong>Durée :</strong> ' . htmlspecialchars($spectacle['duree']) . ' min <br>
+                        <a href="?action=displaySpectacleDetail&id_spectacle=' . $spectacle['id_spectacle'] . '">Voir plus de détails</a>
                       </div>';
         }
         foreach ($spectacleHardRock as $spectacle) {
@@ -57,7 +58,8 @@ class DefaultAction extends Action{
                         <br>
                         <strong>Nom :</strong> ' . htmlspecialchars($spectacle['nomSpec']) . '<br>
                         <strong>Style :</strong> ' . htmlspecialchars($spectacle['style']) . '<br>
-                        <strong>Durée :</strong> ' . htmlspecialchars($spectacle['duree']) . ' min
+                        <strong>Durée :</strong> ' . htmlspecialchars($spectacle['duree']) . ' min <br>
+                        <a href="?action=displaySpectacleDetail&id_spectacle=' . $spectacle['id_spectacle'] . '">Voir plus de détails</a>
                       </div>';
         }
         foreach ($spectacleTechno as $spectacle) {
@@ -65,7 +67,8 @@ class DefaultAction extends Action{
                         <br>
                         <strong>Nom :</strong> ' . htmlspecialchars($spectacle['nomSpec']) . '<br>
                         <strong>Style :</strong> ' . htmlspecialchars($spectacle['style']) . '<br>
-                        <strong>Durée :</strong> ' . htmlspecialchars($spectacle['duree']) . ' min
+                        <strong>Durée :</strong> ' . htmlspecialchars($spectacle['duree']) . ' min <br>
+                        <a href="?action=displaySpectacleDetail&id_spectacle=' . $spectacle['id_spectacle'] . '">Voir plus de détails</a>
                       </div>';
         }
 
