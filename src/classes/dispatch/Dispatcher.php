@@ -78,8 +78,7 @@ class Dispatcher {
             $output = '
             <html>
             <head>
-                <title>Deefy App</title>
-                <link rel="stylesheet" href=""> 
+                <title>Deefy App</title> 
             </head>
             <body>
                 <nav>
