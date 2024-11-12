@@ -95,9 +95,14 @@ class NRVRepository {
     
 
     public function getAllSpectacles(): array {
-        $stmt = $this->pdo->query("SELECT id_spectacle, nomSpec, style, duree FROM spectacle");
+        $stmt = $this->pdo->query("
+            SELECT spectacle.id_spectacle, spectacle.nomSpec, style.nom_style AS style, spectacle.duree 
+            FROM spectacle 
+            JOIN style ON spectacle.id_style = style.id_style
+        ");
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    
     
 
     public function addSpectacleToSoiree(int $spectacleId, int $soireeId): bool {
