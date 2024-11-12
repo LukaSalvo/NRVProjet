@@ -76,10 +76,16 @@ class NRVRepository {
 
 
     public function getSoireeById(int $id): ?array {
-        $stmt = $this->pdo->prepare("SELECT soiree.id_soiree, lieu.nom_lieu, lieu.nb_places, soiree.date FROM soiree JOIN lieu ON soiree.id_lieu = lieu.id_lieu WHERE soiree.id_soiree = :id");
+        $stmt = $this->pdo->prepare("
+            SELECT soiree.id_soiree, soiree.nom_soiree, soiree.date, soiree.annule, lieu.nom_lieu, lieu.nb_place, lieu.adresse
+            FROM soiree 
+            JOIN lieu ON soiree.id_lieu = lieu.id_lieu 
+            WHERE soiree.id_soiree = :id
+        ");
         $stmt->execute(['id' => $id]);
         return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
     }
+    
 
     public function findSpectaclesBySoireeId(int $soireeId): array {
         $stmt = $this->pdo->prepare("
@@ -200,16 +206,16 @@ class NRVRepository {
     public function getSpectacleById(int $id): ?array {
         $stmt = $this->pdo->prepare("
             SELECT spectacle.id_spectacle, spectacle.nomSpec, style.nom_style AS style, spectacle.duree, soiree.date, lieu.nom_lieu 
-            FROM spectacle
+            FROM spectacle 
             JOIN style ON spectacle.id_style = style.id_style
-            JOIN soiree2spectacle ON spectacle.id_spectacle = soiree2spectacle.id_spectacle
-            JOIN soiree ON soiree2spectacle.id_soiree = soiree.id_soiree
-            JOIN lieu ON soiree.id_lieu = lieu.id_lieu
+            JOIN soiree ON spectacle.id_soiree = soiree.id_soiree 
+            JOIN lieu ON soiree.id_lieu = lieu.id_lieu 
             WHERE spectacle.id_spectacle = :id
         ");
         $stmt->execute(['id' => $id]);
         return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
     }
+    
     
     
     
@@ -241,6 +247,29 @@ class NRVRepository {
         $stmt = $this->pdo->query("SELECT DISTINCT date FROM soiree ORDER BY date");
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function updateSoiree(int $soireeId, string $nom, string $date, string $lieu, int $nb_place): void {
+        $stmt = $this->pdo->prepare("
+            UPDATE soiree
+            SET nom_soiree = :nom, date = :date, id_lieu = (
+                SELECT id_lieu FROM lieu WHERE nom_lieu = :lieu
+            )
+            WHERE id_soiree = :id_soiree
+        ");
+        $stmt->execute([
+            'nom' => $nom,
+            'date' => $date,
+            'lieu' => $lieu,
+            'id_soiree' => $soireeId
+        ]);
+    }
+
+    public function cancelSoiree(int $soireeId): void {
+        $stmt = $this->pdo->prepare("UPDATE soiree SET annule = 1 WHERE id_soiree = :id_soiree");
+        $stmt->execute(['id_soiree' => $soireeId]);
+    }
+    
+    
     
     
 }

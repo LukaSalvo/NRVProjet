@@ -3,14 +3,24 @@
 namespace iutnc\nrv\action;
 
 use iutnc\nrv\auth\Authz;
+use iutnc\nrv\auth\AuthnProvider;
 use iutnc\nrv\repository\NRVRepository;
 
 class AddSpectacleAction extends Action {
 
     public function execute(): string {
-        // Vérifie si l'utilisateur est un admin
-        if (!isset($_SESSION['user']) || !Authz::isAdmin($_SESSION['user']['id_user'])) {
-            return "<p>Accès refusé : vous n'avez pas les droits nécessaires pour accéder à cette page.</p>";
+        // Récupère l'utilisateur connecté
+        try {
+            $currentUser = AuthnProvider::getSignedInUser();
+            $authz = new Authz($currentUser);
+
+            // Vérifie si l'utilisateur est un administrateur
+            if (!$authz->isAdmin()) {
+                return "<p>Accès refusé : vous n'avez pas les droits nécessaires pour accéder à cette page.</p>";
+            }
+
+        } catch (\Exception $e) {
+            return "<p>Erreur : " . $e->getMessage() . "</p>";
         }
 
         $repo = NRVRepository::getInstance();
