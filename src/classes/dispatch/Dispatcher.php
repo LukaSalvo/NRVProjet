@@ -79,7 +79,7 @@ class Dispatcher {
             <html>
             <head>
                 <title>Deefy App</title>
-                <link rel="stylesheet" href="src/style/style.css"> 
+                <link rel="stylesheet" href="style/style.css"> 
             </head>
             <body>
                 <nav>
@@ -87,7 +87,8 @@ class Dispatcher {
                     <a href="?action=addSoiree">Soiree</a>';
 
             if ($user !== null) {
-                $output .= '<a href =?action=logout> Se Deconnecter</a>';
+                $output .= '<a href =?action=logout> Se Deconnecter</a>
+                            <a href =?action=filterByLocation> Depuis une localisation </a>';
             } else {
                 $output .= '
              <a href = "?action=login">Connexion</a>
@@ -98,6 +99,9 @@ class Dispatcher {
             $output .= '
                 </nav>
                 <main>' . $res . '</main>
+            <footer>
+                <p>&copy; 2023 NRVFestival. Tous droits réservés.</p>
+            </footer>
             </body>
             </html>';
 
