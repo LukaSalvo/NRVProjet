@@ -84,9 +84,9 @@ class Dispatcher {
             <html>
             <head>
 
-                <title>Deefy App</title> 
+                <title>NRV RockNRoll</title> 
 
-                <title>Deefy App</title>
+                
                 
 
             </head>
