@@ -73,29 +73,28 @@ class Dispatcher {
         $this->renderPage($res);
     }
 
-    public function renderPage(string $res): void {
-        $user = null;
-        $isAdmin = false;
+    public function renderPage(string $res): void
+    {
+        {
+            $user = null;
 
-        if (isset($_SESSION['user'])) {
-            try {
-                $user = unserialize($_SESSION['user']);
-                $authz = new Authz($user);
-                $isAdmin = $authz->isAdmin();
-            } catch (\Exception $e) {
-                // Gestion des erreurs de session ou de désérialisation
+            if (isset($_SESSION['user'])) {
+                try {
+                    $user = unserialize($_SESSION['user']);
+                } catch (Exception $e) {
+                }
             }
-        }
 
-        $output = '
-        <html>
-        <head>
-            <title>NRV Festival</title>
-            <link rel="stylesheet" href="style/style.css"> 
-        </head>
-        <body>
-            <nav>
-                <a href="?action=default">Accueil</a>';
+            $output = '
+            <html>
+            <head>
+                <title>Deefy App</title>
+                <link rel="stylesheet" href="style/style.css"> 
+            </head>
+            <body>
+                <nav>
+                    <a href="?action=default">Accueil</a>        
+                    <a href="?action=addSoiree">Soiree</a>';
 
         if ($user !== null) {
             $output .= '<a href="?action=logout">Se Déconnecter</a>

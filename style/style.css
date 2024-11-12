@@ -146,7 +146,9 @@ form {
 /* Style pour les champs de saisie (email et mot de passe) */
 input[type="text"],
 input[type="password"],
-input[type="email"]{
+input[type="email"],
+input[type="number"],
+input[type="date"] {
   width: 100%;
   padding: 12px;
   margin: 10px 0;
@@ -161,7 +163,9 @@ input[type="email"]{
 /* Effet focus pour les champs de saisie */
 input[type="text"]:focus,
 input[type="password"]:focus,
-input[type="email"]:focus
+input[type="email"]:focus,
+input[type="number"]:focus,
+input[type="date"]:focus
  {
   border-color: #007BFF; /* Bordure bleue au focus */
   background-color: #f0f8ff; /* Léger fond bleu clair au focus */
