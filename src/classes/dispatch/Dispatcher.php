@@ -12,6 +12,7 @@ use iutnc\nrv\action\LogInAction;
 use iutnc\nrv\action\LogOutAction;
 use iutnc\nrv\action\RegisterAction;
 use iutnc\nrv\action\AddSpectacleAction;
+use iutnc\nrv\action\LikeAction;
 use iutnc\nrv\auth\Authz;
 
 class Dispatcher {
@@ -50,6 +51,9 @@ class Dispatcher {
                 break;
             case 'displaySpectacleDetail':
                 $action = new DisplaySpectacleDetailAction();
+                break;
+            case 'like':
+                $action = new LikeAction();
                 break;
             default:
                 $action = new DefaultAction();
