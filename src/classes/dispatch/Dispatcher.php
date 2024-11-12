@@ -67,10 +67,13 @@ class Dispatcher {
     {
         {
             $user = null;
+            $isAdmin = false;
 
             if (isset($_SESSION['user'])) {
                 try {
                     $user = unserialize($_SESSION['user']);
+                    $authz = new Authz($user);
+                    $isAdmin = $authz->isAdmin();
                 } catch (Exception $e) {
                 }
             }
@@ -84,7 +87,11 @@ class Dispatcher {
             <body>
                 <nav>
                     <a href="?action=default">Accueil</a>        
-                    <a href="?action=addSoiree">Soiree</a>';
+                    ';
+
+            if ($isAdmin) {
+                $output .= '<a href="?action=addSoiree">Soirée</a>';
+            }
 
             if ($user !== null) {
                 $output .= '<a href =?action=logout> Se Deconnecter</a>
