@@ -2,6 +2,7 @@
 
 namespace iutnc\nrv\dispatch;
 
+use iutnc\nrv\action\UncancelSoireeAction;
 use iutnc\nrv\action\CancelSoireeAction;
 use iutnc\nrv\action\EditSoireeAction;
 use iutnc\nrv\action\DisplayMesFavorisAction;
@@ -73,6 +74,12 @@ class Dispatcher {
             case 'cancelSoiree':
                 $action = new CancelSoireeAction();
                 break;
+            case 'displaySoiree':
+                $action = new DisplaySoireeAction();
+                break;
+            case 'uncancelSoiree':
+                 $action = new UncancelSoireeAction();
+                break;
             default:
                 $action = new DefaultAction();
                 break;
@@ -108,9 +115,8 @@ class Dispatcher {
             </head>
             <body>
                 <nav>
-                    <a href="?action=default">Accueil</a>        
-                    ';
-
+                    <a href="?action=default">Accueil</a>
+                    <a href="?action=displaySoiree">Liste des soirées</a>';
         if ($user !== null) {
             $output .= '<a href="?action=logout">Se Déconnecter</a>
                         <a href="?action=filterByLocation">Depuis une localisation</a>

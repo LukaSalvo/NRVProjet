@@ -1,7 +1,7 @@
 <?php
 
-
 namespace iutnc\nrv\action;
+
 use iutnc\nrv\repository\NRVRepository;
 
 class DefaultAction extends Action{
@@ -12,6 +12,7 @@ class DefaultAction extends Action{
         $spectacleRock = $repository->getSpectaclesByStyle('Rock', null);
         $spectacleHardRock = $repository->getSpectaclesByStyle('Hard Rock', null);
         $spectacleTechno = $repository->getSpectaclesByStyle('Techno', null);
+
         $html ='
         <!DOCTYPE html>
         <html lang="fr">
@@ -19,7 +20,6 @@ class DefaultAction extends Action{
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>Bienvenu sur le site officiel de NRV</title>
-            
         </head>
         <body>
             <div class="container">
@@ -28,50 +28,32 @@ class DefaultAction extends Action{
                     blablabla !
                     <br>
                     Commencez votre aventure musicale maintenant !
-                    
                 </p>
                 <h2> Nos soirées ayant le plus de succès </h2>';
+
         foreach ($soirees as $soiree) {
+            $status = $soiree['annuler'] == 0 ? " (Annulée)" : "";
             $html .= '<div class="soiree">
                         <br>
-                        <strong>Nom de la soirée :</strong> '.htmlspecialchars($soiree['nom_soiree']).'<br>
+                        <strong>Nom de la soirée :</strong> '.htmlspecialchars($soiree['nom_soiree']).' '.$status.'<br>
                         <strong>Lieu :</strong> ' . htmlspecialchars($soiree['nom_lieu']) . '<br>
                         <strong>Date :</strong> ' . htmlspecialchars($soiree['date']) . '<br>
-                       
-                    
                       </div>';
         }
 
+        $html .= '<h2>Nos recommandations de spectacle</h2>';
 
-        $html .= '<h2>Nos recommandations de spéctacle</h2>';
-        foreach ($spectacleRock as $spectacle) {
-            $html .= '<div class="spectacle">
-                        <br>
-                        <strong>Nom :</strong> ' . htmlspecialchars($spectacle['nomSpec']) . '<br>
-                        <strong>Style :</strong> ' . htmlspecialchars($spectacle['style']) . '<br>
-                        <strong>Durée :</strong> ' . htmlspecialchars($spectacle['duree']) . ' min <br>
-                        <a href="?action=displaySpectacleDetail&id_spectacle=' . $spectacle['id_spectacle'] . '">Voir plus de détails</a>
-                      </div>';
+        foreach ([$spectacleRock, $spectacleHardRock, $spectacleTechno] as $spectacles) {
+            foreach ($spectacles as $spectacle) {
+                $html .= '<div class="spectacle">
+                            <br>
+                            <strong>Nom :</strong> ' . htmlspecialchars($spectacle['nomSpec']) . '<br>
+                            <strong>Style :</strong> ' . htmlspecialchars($spectacle['style']) . '<br>
+                            <strong>Durée :</strong> ' . htmlspecialchars($spectacle['duree']) . ' min <br>
+                            <a href="?action=displaySpectacleDetail&id_spectacle=' . $spectacle['id_spectacle'] . '">Voir plus de détails</a>
+                          </div>';
+            }
         }
-        foreach ($spectacleHardRock as $spectacle) {
-            $html .= '<div class="spectacle">
-                        <br>
-                        <strong>Nom :</strong> ' . htmlspecialchars($spectacle['nomSpec']) . '<br>
-                        <strong>Style :</strong> ' . htmlspecialchars($spectacle['style']) . '<br>
-                        <strong>Durée :</strong> ' . htmlspecialchars($spectacle['duree']) . ' min <br>
-                        <a href="?action=displaySpectacleDetail&id_spectacle=' . $spectacle['id_spectacle'] . '">Voir plus de détails</a>
-                      </div>';
-        }
-        foreach ($spectacleTechno as $spectacle) {
-            $html .= '<div class="spectacle">
-                        <br>
-                        <strong>Nom :</strong> ' . htmlspecialchars($spectacle['nomSpec']) . '<br>
-                        <strong>Style :</strong> ' . htmlspecialchars($spectacle['style']) . '<br>
-                        <strong>Durée :</strong> ' . htmlspecialchars($spectacle['duree']) . ' min <br>
-                        <a href="?action=displaySpectacleDetail&id_spectacle=' . $spectacle['id_spectacle'] . '">Voir plus de détails</a>
-                      </div>';
-        }
-
 
         $html .= '
             </div>
@@ -80,7 +62,4 @@ class DefaultAction extends Action{
 
         return $html;
     }
-    
-
-
 }

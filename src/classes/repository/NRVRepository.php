@@ -284,10 +284,11 @@ class NRVRepository {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     
-    public function cancelSoiree(int $id): bool {
-        $stmt = $this->pdo->prepare("UPDATE soiree SET annuler = 0 WHERE id_soiree = :id");
-        return $stmt->execute(['id' => $id]);
+    public function cancelSoiree(int $idSoiree): bool {
+        $stmt = $this->pdo->prepare("UPDATE soiree SET annuler = 0 WHERE id_soiree = :id_soiree");
+        return $stmt->execute(['id_soiree' => $idSoiree]);
     }
+
 
 
     public function isFavori(int $userId, int $spectacleId): bool {
@@ -297,6 +298,11 @@ class NRVRepository {
     }
 
 
+    public function updateSoireeAnnulation(int $idSoiree, int $status): bool {
+        $stmt = $this->pdo->prepare("UPDATE soiree SET annuler = :status WHERE id_soiree = :id_soiree");
+        return $stmt->execute(['status' => $status, 'id_soiree' => $idSoiree]);
+    }
+    
 
     
 }
