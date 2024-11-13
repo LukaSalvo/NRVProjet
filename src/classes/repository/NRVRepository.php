@@ -274,6 +274,13 @@ class NRVRepository {
     }
 
 
+    public function isFavori(int $userId, int $spectacleId): bool {
+        $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM favoris WHERE id_user = :userId AND id_spectacle = :spectacleId");
+        $stmt->execute([':userId' => $userId, ':spectacleId' => $spectacleId]);
+        return $stmt->fetchColumn() > 0;
+    }
+
+
 
     
 }
