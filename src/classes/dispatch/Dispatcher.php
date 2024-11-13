@@ -2,7 +2,7 @@
 
 namespace iutnc\nrv\dispatch;
 
-use iutnc\nrv\action\DisplayMesFavorisAction;
+use iutnc\nrv\action\EditSoireeListAction;
 use iutnc\nrv\action\AddSoireeAction;
 use iutnc\nrv\action\DefaultAction;
 use iutnc\nrv\action\DisplaySoireeAction;
@@ -28,9 +28,6 @@ class Dispatcher {
 
     public function run(): void {
         switch ($this->action) {
-            case 'spectFavoris':
-                $action = new DisplayMesFavorisAction();
-                break;
             case 'addSoiree':
                 $action = new AddSoireeAction();
                 break;
@@ -61,6 +58,9 @@ class Dispatcher {
             case 'like':
                 $action = new LikeAction();
                 break;
+            case 'editSoireeList':
+                $action = new EditSoireeListAction();
+                break;
             default:
                 $action = new DefaultAction();
                 break;
@@ -88,9 +88,9 @@ class Dispatcher {
             <html>
             <head>
 
-                <title>Deefy App</title> 
+                <title>NRV RockNRoll</title> 
 
-                <title>Deefy App</title>
+                
                 
 
             </head>
@@ -101,12 +101,13 @@ class Dispatcher {
 
         if ($user !== null) {
             $output .= '<a href="?action=logout">Se Déconnecter</a>
-                        <a href="?action=filterByLocation">Depuis une localisation</a>
-                        <a href="?action=spectFavoris">Mes favoris</a>';
+                        <a href="?action=filterByLocation">Depuis une localisation</a>';
             if ($isAdmin) {
                 $output .= '<a href="?action=addSoiree">Ajouter une Soirée</a>';
                 $output .= '<a href="?action=addSpectacle">Ajouter un Spectacle</a>';
+                $output .= '<a href="?action=editSoireeList">Modifier ou Annuler une Soirée</a>';
             }
+            
         } else {
             $output .= '
              <a href="?action=login">Connexion</a>
