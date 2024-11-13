@@ -255,9 +255,10 @@ class NRVRepository {
 
 
     public function getFavorisByUserId($userId) {
-        $sql = "SELECT spectacle .nomSpec 
+        $sql = "SELECT spectacle.nomSpec , spectacle.duree , spectacle.id_spectacle , style.nom_style
                 FROM spectacle 
                 INNER JOIN user2spectacleLike  ON spectacle .id_spectacle = user2spectacleLike.id_spectacle
+                INNER JOIN style ON spectacle.id_style = style.id_style
                 WHERE user2spectacleLike.id_user = :user_id";
 
         $stmt = $this->pdo->prepare($sql);
@@ -271,5 +272,8 @@ class NRVRepository {
         $stmt = $this->pdo->prepare("UPDATE soiree SET status = 'annulee' WHERE id_soiree = :id");
         return $stmt->execute(['id' => $id]);
     }
+
+
+
     
 }
