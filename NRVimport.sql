@@ -53,10 +53,9 @@ CREATE TABLE `spectacle` (
 	`id_spectacle` INT NOT NULL AUTO_INCREMENT,
 	`nomSpec` VARCHAR(100) NOT NULL,
 	`id_style` INT NOT NULL,
-	`id_soiree` INT NOT NULL,
+	`description`VARCHAR(700) ,
 	`duree` INT NOT NULL,
 	PRIMARY KEY(`id_spectacle`),
-	FOREIGN KEY (`id_soiree`) REFERENCES `soiree`(`id_soiree`),
     FOREIGN KEY (`id_style`) REFERENCES `style`(`id_style`)
 );
 
@@ -147,21 +146,21 @@ INSERT INTO `soiree` (id_soiree , nom_soiree, id_lieu, date, annuler) VALUES
 
 
 
-INSERT INTO spectacle (id_spectacle, nomSpec, id_style, duree , id_soiree) VALUES
-                                                                               (1, 'Rock Vibes', 1, 90, 1),
-                                                                               (2, 'Hardcore Thunder', 2, 105, 1),
-                                                                               (3, 'Techno Pulse', 3, 100, 2),
-                                                                               (4, 'Acid Flow', 4, 95, 2),
-                                                                               (5, 'Electric Night', 5, 85, 3),
-                                                                               (6, 'Metal Scream', 6, 110, 3),
-                                                                               (7, 'Blue Fusion', 7, 90, 4),
-                                                                               (8, 'Synthwave Dreams', 1, 80, 4),
-                                                                               (9, 'Groove Jam', 2, 75, 5),
-                                                                               (10, 'Dark Soundscapes', 3, 90, 5),
-                                                                               (11, 'Hypnotic Journey', 4, 95, 6),
-                                                                               (12, 'Neon Nights', 5, 85, 6),
-                                                                               (13, 'Night Bassline', 6, 90, 7),
-                                                                               (14, 'Pulse Driver', 7, 105, 7);
+INSERT INTO spectacle (id_spectacle, nomSpec, id_style, duree ,description) VALUES
+                                                                               (1, 'Rock Vibes', 1, 90, 'Une soirée de rock'),
+                                                                               (2, 'Hardcore Thunder', 2, 105, 'Une soirée de Hard rock'),
+                                                                               (3, 'Techno Pulse', 3, 100,'Une soirée de Techno' ),
+                                                                               (4, 'Acid Flow', 4, 95, 'Une soirée de Acid'),
+                                                                               (5, 'Electric Night', 5, 85, 'Une soirée de Electronic'),
+                                                                               (6, 'Metal Scream', 6, 110, 'Une soirée de Metal'),
+                                                                               (7, 'Blue Fusion', 7, 90, 'Une soirée de Blues'),
+                                                                               (8, 'Synthwave Dreams', 1, 80, 'Une soirée de rock'),
+                                                                               (9, 'Groove Jam', 2, 75, 'Une soirée de Hard rock'),
+                                                                               (10, 'Dark Soundscapes', 3, 90, 'Une soirée de Techno'),
+                                                                               (11, 'Hypnotic Journey', 4, 95, 'Une soirée de Acid'),
+                                                                               (12, 'Neon Nights', 5, 85, 'Une soirée de Electronic'),
+                                                                               (13, 'Night Bassline', 6, 90, 'Une soirée de Metal'),
+                                                                               (14, 'Pulse Driver', 7, 105, 'Une soirée de Blues');
 
 
 INSERT INTO `soiree2spectacle` (id_spectacle, id_soiree) VALUES
