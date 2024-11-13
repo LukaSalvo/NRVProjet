@@ -9,10 +9,10 @@ use iutnc\nrv\repository\NRVRepository;
 class RegisterAction extends Action {
     public function execute(): string {
         if (isset($_POST['email'], $_POST['username'], $_POST['password'], $_POST['confirm_password'])) {
-            $email = $_POST['email'];
-            $username = $_POST['username'];
-            $password = $_POST['password'];
-            $confirmPassword = $_POST['confirm_password'];
+            $email = filter_var($_POST['email'],FILTER_SANITIZE_EMAIL);
+            $username = htmlspecialchars(strip_tags($_POST['username']), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+            $password = filter_var($_POST['password'],FILTER_SANITIZE_SPECIAL_CHARS);
+            $confirmPassword = filter_var($_POST['confirm_password'],FILTER_SANITIZE_SPECIAL_CHARS);
 
             if ($password !== $confirmPassword) {
                 return "Erreur : Les mots de passe ne correspondent pas.";
