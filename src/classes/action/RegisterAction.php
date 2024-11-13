@@ -14,40 +14,17 @@ class RegisterAction extends Action {
             $password = filter_var($_POST['password'],FILTER_SANITIZE_SPECIAL_CHARS);
             $confirmPassword = filter_var($_POST['confirm_password'],FILTER_SANITIZE_SPECIAL_CHARS);
 
-            if ($password !== $confirmPassword) {
-                return <<<HTML
-                    <div class="text-center text-red-500 font-semibold mt-4">
-                        <p>Erreur : Les mots de passe ne correspondent pas.</p>
-                    </div>
-                HTML;
-            }
-
-            $repo = NRVRepository::getInstance();
-
             try {
-                if ($repo->getUserByEmail($email)) {
-                    return <<<HTML
-                        <div class="text-center text-red-500 font-semibold mt-4">
-                            <p>Erreur : Cet email est déjà utilisé.</p>
-                        </div>
-                    HTML;
+                if ($password !== $confirmPassword) {
+                    return "<div class='text-center text-red-500'>Les mots de passe ne correspondent pas.</div>";
                 }
-
-                $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-                $repo->createUser($email, $username, $hashedPassword);
-
-                return <<<HTML
-                    <div class="text-center text-green-500 font-semibold mt-4">
-                        <p>Inscription réussie ! Vous pouvez maintenant vous connecter.</p>
-                    </div>
-                HTML;
-
+                
+                // Utilise la méthode register qui vérifie la sécurité du mot de passe
+                AuthnProvider::register($email, $password);
+                
+                return "<div class='text-center text-green-500'>Inscription réussie!</div>";
             } catch (AuthnException $e) {
-                return <<<HTML
-                    <div class="text-center text-red-500 font-semibold mt-4">
-                        <p>Erreur lors de l'inscription : {$e->getMessage()}</p>
-                    </div>
-                HTML;
+                return "<div class='text-center text-red-500'>{$e->getMessage()}</div>";
             }
         }
 
