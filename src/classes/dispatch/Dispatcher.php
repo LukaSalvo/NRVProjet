@@ -106,7 +106,7 @@ class Dispatcher {
         if ($user !== null) {
             $output .= '<a href="?action=logout">Se Déconnecter</a>
                         <a href="?action=filterByLocation">Depuis une localisation</a>
-                        <a href="?action=mes-favoris"> Mes Spectacles favoris</a>';
+                        <a href="?action=mes-favoris"> Ma liste de préférences</a>';
             if ($isAdmin) {
                 $output .= '<a href="?action=addSoiree">Ajouter une Soirée</a>';
                 $output .= '<a href="?action=addSpectacle">Ajouter un Spectacle</a>';

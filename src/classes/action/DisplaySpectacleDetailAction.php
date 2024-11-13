@@ -53,7 +53,7 @@ class DisplaySpectacleDetailAction extends Action {
             $output .= '
             <form action="index.php" method="get">
                 <input type="hidden" name="id_spectacle" value="' . $spectacleId . '">
-                <button type="submit" name="action" value="like">Ajouter aux favoris</button>
+                <button type="submit" name="action" value="like">Ajouter a ma liste de préférence</button>
             </form>';
             return $output;
 
