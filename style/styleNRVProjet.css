@@ -1,0 +1,467 @@
+/* styleNRV.css */
+
+/* Styles généraux */
+body {
+    font-family: 'Arial', sans-serif;
+    line-height: 1.6;
+}
+
+/* Cartes pour les événements */
+.card {
+    @apply p-4 bg-white rounded shadow-md mb-6;
+}
+
+.card-header {
+    @apply text-lg font-bold text-purple-700;
+}
+
+.card-body {
+    @apply text-gray-700;
+}
+
+/* Formulaires */
+form label {
+    @apply font-semibold text-gray-700;
+}
+
+form input, form select, form textarea {
+    @apply border border-gray-300 rounded w-full p-2 mb-4 focus:outline-none focus:border-purple-500;
+}
+
+form input[type="submit"] {
+    @apply bg-purple-700 text-white font-bold py-2 px-4 rounded hover:bg-purple-800;
+}
+
+/* Footer */
+footer {
+    background-color: #6B21A8; /* Couleur violette vibrante */
+}
+
+/* styleNRV.css */
+
+/* Boutons principaux */
+.button-primary {
+    @apply bg-purple-700 text-white font-bold py-2 px-4 rounded-lg shadow-md hover:bg-purple-800 transition duration-300;
+}
+
+.button-secondary {
+    @apply bg-yellow-500 text-gray-900 font-semibold py-2 px-4 rounded-lg shadow hover:bg-yellow-600 transition duration-300;
+}
+
+/* Liens stylisés */
+.link-primary {
+    @apply text-purple-700 font-semibold hover:underline transition duration-200;
+}
+
+.link-secondary {
+    @apply text-yellow-500 hover:text-yellow-600 font-semibold transition duration-200;
+}
+
+/* Zones de texte */
+.input-text {
+    @apply border border-gray-300 rounded-lg w-full py-2 px-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-700 transition duration-200;
+}
+
+/* Menu déroulant */
+.select-dropdown {
+    @apply border border-gray-300 rounded-lg w-full py-2 px-3 bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-700 transition duration-200;
+}
+
+/* Style du texte */
+.heading-main {
+    @apply text-3xl font-bold text-purple-700 mb-4;
+}
+
+.subheading {
+    @apply text-xl font-semibold text-gray-800 mb-2;
+}
+
+.text-body {
+    @apply text-gray-700 mb-4 leading-relaxed;
+}
+
+/* Style des cartes de favoris */
+.card {
+    background-color: #f9fafb; /* Couleur de fond douce */
+    border-radius: 0.5rem; /* Arrondir les coins */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Ombre douce */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px); /* Légère élévation au survol */
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15); /* Ombre accentuée */
+}
+
+/* Style des liens */
+.link-primary {
+    color: #6366f1; /* Indigo */
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.link-primary:hover {
+    color: #4338ca; /* Teinte plus foncée au survol */
+    text-decoration: underline;
+}
+
+/* Typographie */
+h2 {
+    color: #4c51bf; /* Titre en indigo foncé */
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+p {
+    color: #4a5568; /* Gris doux pour le texte */
+}
+
+/* Structure des containers */
+.container {
+    padding: 1rem;
+    margin: auto;
+    max-width: 1200px;
+}
+
+/* Style des badges */
+.bg-red-500 {
+    background-color: #f56565;
+}
+.bg-green-500 {
+    background-color: #48bb78;
+}
+.text-white {
+    color: #ffffff;
+}
+.text-xs {
+    font-size: 0.75rem;
+}
+.font-semibold {
+    font-weight: 600;
+}
+
+/* Bouton de retrait d'annulation */
+.bg-yellow-500 {
+    background-color: #ecc94b;
+}
+.bg-yellow-600:hover {
+    background-color: #d69e2e;
+}
+
+/* Ombres et transitions */
+.shadow-md {
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+.hover\:shadow-lg:hover {
+    box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.15);
+}
+.transition {
+    transition: all 0.3s ease;
+}
+.duration-200 {
+    transition-duration: 0.2s;
+}
+
+/* Conteneur général */
+.container {
+    padding: 1.5rem;
+    background: linear-gradient(to right, #ebf4ff, #ebf8ff);
+    border-radius: 1rem;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+/* Titres et texte */
+h2 {
+    font-size: 1.75rem;
+    color: #5a67d8;
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+p {
+    color: #4a5568;
+}
+
+/* Formulaire de filtrage */
+form {
+    max-width: 500px;
+    margin: 0 auto;
+}
+form label {
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+form select, form button {
+    width: 100%;
+}
+
+/* Cartes de résultats */
+.card {
+    padding: 1rem;
+    background-color: #ffffff;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease-in-out;
+}
+.card:hover {
+    transform: translateY(-3px);
+}
+.card-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+/* Boutons */
+button {
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+button:hover {
+    background-color: #2563eb; /* Slightly darker blue */
+}
+
+/* Container Styling */
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* Title and Section Styling */
+h2, h3 {
+    color: #6b21a8; /* Purple theme for festival vibes */
+}
+
+/* Card Styles for List Items */
+.list-group-item {
+    padding: 1rem;
+    background-color: #ffffff;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease-in-out;
+}
+.list-group-item:hover {
+    transform: translateY(-3px);
+}
+
+/* Button Styles */
+button, .btn {
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+.btn-secondary {
+    background-color: #4b5563; /* Gray */
+}
+.btn-secondary:hover {
+    background-color: #374151; /* Darker Gray */
+}
+.btn-primary {
+    background-color: #7c3aed; /* Purple */
+}
+.btn-primary:hover {
+    background-color: #6d28d9; /* Darker Purple */
+}
+
+
+/* Pied de page */
+footer {
+    color: #f3e8ff;
+    background-color: #6b21a8;
+}
+footer p {
+    font-weight: 500;
+}
+
+/* Form inputs */
+.form-control, input, textarea, select {
+    transition: border-color 0.3s ease;
+    border-radius: 0.375rem;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: #805ad5; /* Amélioration du focus */
+}
+
+/* Boutons */
+.btn {
+    transition: background-color 0.3s ease;
+    border-radius: 0.375rem;
+}
+
+.btn-primary {
+    background-color: #6b46c1;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #553c9a;
+}
+
+.btn-info {
+    background-color: #3182ce;
+    color: white;
+}
+
+.btn-info:hover {
+    background-color: #2b6cb0;
+}
+
+.btn-danger {
+    background-color: #e53e3e;
+    color: white;
+}
+
+.btn-danger:hover {
+    background-color: #c53030;
+}
+
+/* Header styling */
+h2 {
+    color: #6b46c1;
+    font-weight: 600;
+}
+
+/* Style du menu de navigation */
+nav {
+    background: linear-gradient(90deg, #6B21A8, #4C1D95); /* Dégradé violet foncé */
+    color: #ffffff;
+}
+
+nav a {
+    color: #ffffff;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+nav a:hover {
+    color: #FDE68A; /* Jaune doux au survol */
+    text-decoration: underline;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.text-3xl {
+    font-size: 1.875rem;
+}
+
+.font-extrabold {
+    font-weight: 800;
+}
+
+.hidden {
+    display: none;
+}
+
+.md\\:flex {
+    display: flex;
+}
+
+.space-x-6 > :not(:last-child) {
+    margin-right: 1.5rem;
+}
+
+.space-x-4 > :not(:last-child) {
+    margin-right: 1rem;
+}
+
+.transition {
+    transition: all 0.3s ease;
+}
+
+.bg-gradient-to-r {
+    background-image: linear-gradient(to right, #6B21A8, #4C1D95);
+}
+
+.hover\\:text-yellow-300:hover {
+    color: #FDE68A;
+}
+
+/* styleNRV.css */
+
+/* Styles pour les formulaires d'édition de soirée */
+.input-text {
+    border: 1px solid #ddd;
+    border-radius: 0.375rem;
+    width: 100%;
+    padding: 0.75rem;
+    color: #4a5568;
+    transition: border-color 0.3s ease;
+    background-color: #f9fafb;
+}
+
+.input-text:focus {
+    border-color: #805ad5;
+    outline: none;
+}
+
+/* Styles de conteneur */
+.container {
+    background: linear-gradient(to right, #f3e8ff, #ebf8ff);
+    padding: 2rem;
+    border-radius: 1rem;
+    max-width: 800px;
+    margin: 2rem auto;
+}
+
+/* Bouton principal */
+/* Bouton principal pour Enregistrer les modifications */
+.button-primary {
+    background-color: #6b46c1;
+    color: #ffffff;
+    font-weight: bold;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0px 4px 8px rgba(107, 70, 193, 0.4);
+}
+
+.button-primary:hover {
+    background-color: #553c9a;
+    transform: translateY(-3px) scale(1.05); /* Légère élévation et agrandissement */
+    box-shadow: 0px 6px 12px rgba(85, 60, 154, 0.6);
+}
+
+.button-primary:active {
+    transform: translateY(0) scale(1); /* Réinitialisation à l'appui */
+    box-shadow: 0px 4px 8px rgba(107, 70, 193, 0.4);
+}
+
+
+/* Messages d'alerte */
+.alert {
+    padding: 1rem;
+    border-radius: 0.375rem;
+    margin-bottom: 1rem;
+    font-weight: bold;
+    text-align: center;
+}
+
+.alert-danger {
+    background-color: #ffe5e5;
+    color: #c53030;
+}
+
+.alert-warning {
+    background-color: #fff3cd;
+    color: #d69e2e;
+}
+
+.alert-success {
+    background-color: #e6fffa;
+    color: #38a169;
+}
+
+/* Titres */
+h2 {
+    font-size: 2rem;
+    color: #6b46c1;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}

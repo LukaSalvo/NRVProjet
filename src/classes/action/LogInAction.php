@@ -14,28 +14,38 @@ class LogInAction extends Action {
         }
 
         return <<<HTML
-        <h1>Bienvenue sur NRV !</h1>
-        <br>
-        <form method="POST" action="?action=login" enctype="multipart/form-data">
-            
-            <div>
-            <br>
-            <h2>Connexion à NRV</h2>
-
-            <label for="email">Adresse Mail :</label><br>
-            <input type="email" name="email" id="email" required><br><br>
-            
-            <label for="password">Mot de passe :</label><br>
-            <input type="password" name="password" id="password" required><br><br>
-            <br>
-            
-            <input type="submit" value="Connexion">
-            <br>
-            <a href="?action=register">Je n'ai pas encore de compte.</a>
-            
-        </form>
-        <br>
-        
+        <div class="flex items-center justify-center min-h-screen bg-gray-100">
+            <div class="max-w-md w-full bg-white p-8 rounded-lg shadow-lg">
+                <h1 class="text-3xl font-bold text-center text-purple-700 mb-6">Bienvenue sur NRV !</h1>
+                <h2 class="text-xl text-center text-gray-700 mb-4">Connexion à NRV</h2>
+                
+                <form method="POST" action="?action=login" enctype="multipart/form-data" class="space-y-6">
+                    
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700">Adresse Mail :</label>
+                        <input type="email" name="email" id="email" required 
+                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-purple-500 focus:border-purple-500">
+                    </div>
+                    
+                    <div>
+                        <label for="password" class="block text-sm font-medium text-gray-700">Mot de passe :</label>
+                        <input type="password" name="password" id="password" required 
+                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-purple-500 focus:border-purple-500">
+                    </div>
+                    
+                    <div>
+                        <button type="submit" 
+                            class="w-full py-2 px-4 bg-purple-600 text-white font-semibold rounded-lg shadow-md hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50">
+                            Connexion
+                        </button>
+                    </div>
+                    
+                    <div class="text-center text-gray-600 mt-4">
+                        <a href="?action=register" class="text-purple-600 hover:underline">Je n'ai pas encore de compte.</a>
+                    </div>
+                    
+                </form>
+            </div>
         </div>
         HTML;
     }
@@ -46,7 +56,11 @@ class LogInAction extends Action {
 
         // Vérification de l'email
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            return "<p>Adresse mail invalide !</p>";
+            return <<<HTML
+                <div class="text-center text-red-500 font-semibold mt-4">
+                    <p>Adresse mail invalide !</p>
+                </div>
+            HTML;
         }
 
         try {
@@ -58,18 +72,32 @@ class LogInAction extends Action {
             $authz = new Authz($user);
 
             if ($authz->isAdmin()) {
-                return "<p>Bienvenue, Administrateur!</p>";
+                return <<<HTML
+                    <div class="text-center text-green-500 font-semibold mt-4">
+                        <p>Bienvenue, Administrateur!</p>
+                    </div>
+                HTML;
             } else {
-                return "<p>Bienvenue, Utilisateur!</p>";
+                return <<<HTML
+                    <div class="text-center text-green-500 font-semibold mt-4">
+                        <p>Bienvenue, Utilisateur!</p>
+                    </div>
+                HTML;
             }
 
         } catch (AuthnException $e) {
             if ($e->getMessage() === "Aucun compte trouvé pour cet email.") {
                 return <<<HTML
-                    <p>Aucun compte trouvé pour cet email. <a href="?action=register">Créer un compte</a></p>
+                    <div class="text-center text-red-500 font-semibold mt-4">
+                        <p>Aucun compte trouvé pour cet email. <a href="?action=register" class="text-purple-600 hover:underline">Créer un compte</a></p>
+                    </div>
                 HTML;
             } else {
-                return "<p>Erreur : " . $e->getMessage() . "</p>";
+                return <<<HTML
+                    <div class="text-center text-red-500 font-semibold mt-4">
+                        <p>Erreur : {$e->getMessage()}</p>
+                    </div>
+                HTML;
             }
         }
     }

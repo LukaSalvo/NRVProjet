@@ -9,33 +9,31 @@ use iutnc\nrv\auth\Authz;
 class EditSoireeListAction extends Action {
 
     public function execute(): string {
-        // Vérifie que l'utilisateur est connecté et est administrateur
         try {
             $currentUser = AuthnProvider::getSignedInUser();
             $authz = new Authz($currentUser);
-
             if (!$authz->isAdmin()) {
-                return "<p>Accès refusé : vous n'avez pas les droits nécessaires pour accéder à cette page.</p>";
+                return "<p class='text-red-500 text-center'>Accès refusé : droits administrateur requis.</p>";
             }
         } catch (\Exception $e) {
-            return "<p>Erreur : " . $e->getMessage() . "</p>";
+            return "<p class='text-red-500 text-center'>Erreur : " . $e->getMessage() . "</p>";
         }
 
-        // Récupération des soirées
         $repo = NRVRepository::getInstance();
         $soirees = $repo->getAllSoirees();
 
-        // Affichage de la liste des soirées avec options de modification et annulation
-        $output = "<h2>Liste des soirées</h2><ul>";
+        $output = '<div class="container mx-auto my-8 p-6 bg-white shadow-lg rounded-lg"><h2 class="text-2xl font-semibold text-purple-700 mb-4">Liste des soirées</h2><div class="space-y-4">';
         foreach ($soirees as $soiree) {
-            $output .= "<li>
-                <strong>{$soiree['nom_soiree']}</strong> - {$soiree['date']}
-                <a href='?action=editSoiree&id_soiree={$soiree['id_soiree']}' class='btn-edit'>Modifier</a> |
-                <a href='?action=cancelSoiree&id_soiree={$soiree['id_soiree']}' class='btn-cancel'>Annuler</a>
-            </li>";
+            $output .= '
+                <div class="bg-gray-100 p-4 rounded-lg shadow-md">
+                    <h5 class="text-lg font-bold">' . htmlspecialchars($soiree['nom_soiree']) . '</h5>
+                    <p class="text-gray-700"><strong>Date:</strong> ' . htmlspecialchars($soiree['date']) . '</p>
+                    <a href="?action=editSoiree&id_soiree=' . $soiree['id_soiree'] . '" class="bg-blue-500 text-white py-1 px-3 rounded hover:bg-blue-600">Modifier</a>
+                    <a href="?action=cancelSoiree&id_soiree=' . $soiree['id_soiree'] . '" class="bg-red-500 text-white py-1 px-3 rounded hover:bg-red-600 ml-2">Annuler</a>
+                </div>';
         }
-        $output .= "</ul>";
-        
+        $output .= '</div></div>';
+
         return $output;
     }
 }

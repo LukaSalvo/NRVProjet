@@ -14,27 +14,25 @@ class DisplaySpectacleDetailAction extends Action {
             $spectacle = $repo->getSpectacleById($spectacleId);
             $artists = $repo->getArtistsBySpectacleId($spectacleId);
 
-            // Stocker l'ID du spectacle en session
             $_SESSION['current_spectacle_id'] = $spectacleId;
 
             if (!$spectacle) {
-                return "<p>Spectacle non trouvé.</p>";
+                return "<p class='bg-red-100 text-red-700 p-4 rounded'>Spectacle non trouvé.</p>";
             }
 
-            // Affichage des informations principales du spectacle
-            $output = "
-            <h2>{$spectacle['nomSpec']}</h2>
-            <p><strong>Style :</strong> {$spectacle['style']}</p>
-            <p><strong>Durée :</strong> {$spectacle['duree']} minutes</p>
-            <h3>Artistes</h3>
-            <ul>";
+            $output = '
+            <div class="container mx-auto p-6 bg-gray-100 rounded-lg shadow-lg">
+                <h2 class="text-3xl font-bold text-purple-700 mb-4">' . htmlspecialchars($spectacle['nomSpec']) . '</h2>
+                <p class="text-lg"><strong>Style :</strong> ' . htmlspecialchars($spectacle['style']) . '</p>
+                <p class="text-lg"><strong>Durée :</strong> ' . htmlspecialchars($spectacle['duree']) . ' minutes</p>
+                <h3 class="text-2xl font-semibold text-purple-600 mt-6">Artistes</h3>
+                <ul class="list-group mt-4 space-y-2">';
 
             foreach ($artists as $artist) {
-                $output .= "<li>{$artist['nom_artiste']}</li>";
+                $output .= '<li class="bg-white p-3 rounded shadow-md">' . htmlspecialchars($artist['nom_artiste']) . '</li>';
             }
-            $output .= "</ul>";
+            $output .= '</ul>';
 
-            // Suggestions de spectacles similaires
             $similarByDate = $repo->getSpectaclesByDate($spectacle['date'], $spectacleId);
             $similarByLocation = $repo->getSpectaclesByLocation($spectacle['nom_lieu'], $spectacleId);
             $similarByStyle = $repo->getSpectaclesByStyle($spectacle['style'], $spectacleId);
@@ -43,36 +41,35 @@ class DisplaySpectacleDetailAction extends Action {
             $output .= $this->renderSimilarSection("Autres spectacles au même lieu", $similarByLocation);
             $output .= $this->renderSimilarSection("Autres spectacles du même style", $similarByStyle);
 
-            // Ajout du bouton de retour à l'accueil
             $output .= '
-            <form action="index.php" method="get">
-                <button type="submit" name="action" value="default">Retour à l\'accueil</button>
-            </form>';
+            <div class="mt-6">
+                <a href="?action=default" class="bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded mr-2">Retour à l\'accueil</a>
+                <a href="?action=like&id_spectacle=' . $spectacleId . '" class="bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded">Ajouter à ma liste de préférence</a>
+            </div>
+            </div>';
 
-            //Ajout du bouton pour like un spectacle
-            $output .= '
-            <form action="index.php" method="get">
-                <input type="hidden" name="id_spectacle" value="' . $spectacleId . '">
-                <button type="submit" name="action" value="like">Ajouter a ma liste de préférence</button>
-            </form>';
             return $output;
 
         } else {
-            return "<p>Erreur : ID du spectacle non fourni.</p>";
+            return "<p class='bg-red-100 text-red-700 p-4 rounded'>Erreur : ID du spectacle non fourni.</p>";
         }
     }
 
     private function renderSimilarSection(string $title, array $spectacles): string {
-        if (empty($spectacles)) {
-            return "";
-        }
+        if (empty($spectacles)) return "";
 
-        $output = "<h3>$title</h3><ul>";
+        $output = '<h3 class="text-2xl font-semibold text-purple-600 mt-6">' . htmlspecialchars($title) . '</h3><ul class="list-group mt-4 space-y-2">';
         foreach ($spectacles as $spectacle) {
-            $output .= "<li><a href='?action=displaySpectacleDetail&id_spectacle={$spectacle['id_spectacle']}'>{$spectacle['nomSpec']} - {$spectacle['style']} ({$spectacle['duree']} minutes)</a></li>";
+            $output .= '
+                <li class="bg-white p-4 rounded shadow-md">
+                    <a href="?action=displaySpectacleDetail&id_spectacle=' . $spectacle['id_spectacle'] . '" class="text-blue-600 hover:underline font-semibold">
+                        ' . htmlspecialchars($spectacle['nomSpec']) . ' - ' . htmlspecialchars($spectacle['style']) . ' (' . htmlspecialchars($spectacle['duree']) . ' minutes)
+                    </a>
+                </li>';
         }
-        $output .= "</ul>";
+        $output .= '</ul>';
 
         return $output;
     }
 }
+
