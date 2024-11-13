@@ -1,5 +1,4 @@
 <?php
-
 namespace iutnc\nrv\action;
 
 use iutnc\nrv\auth\Authz;
@@ -26,37 +25,68 @@ class AddSpectacleAction extends Action {
         $repo = NRVRepository::getInstance();
 
         // Traitement du formulaire d'ajout de spectacle
-        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['nomSpec'], $_POST['style'], $_POST['duree'], $_POST['description'], $_POST['artistes'])) {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['nomSpec'], $_POST['style'], $_POST['duree'], $_POST['description'], $_POST['artistes'], $_POST['soiree'])) {
             $nomSpec = $_POST['nomSpec'];
-            $style = $_POST['style'];
+            $id_style = (int)$_POST['style'];
             $duree = (int)$_POST['duree'];
             $description = $_POST['description'];
             $artistes = explode(',', $_POST['artistes']); // Liste d'artistes séparés par des virgules
+            $soireeId = (int)$_POST['soiree'];
 
-            $spectacleId = $repo->createSpectacle($nomSpec, $style, $duree, $description, $artistes);
+            $spectacleId = $repo->createSpectacle($nomSpec, $id_style, $duree, $description, $artistes, $soireeId);
             return "<p>Spectacle ajouté avec succès ! <a href='?action=displaySpectacleDetail&id_spectacle={$spectacleId}'>Voir le spectacle</a></p>";
         }
 
+        // Récupérer les soirées disponibles
+        $soirees = $repo->getSoirees();
+
+        // Récupérer les styles disponibles
+        $styles = $repo->getStyles();
+
         // Formulaire de création de spectacle
-        return <<<HTML
-            <form method="POST" action="?action=addSpectacle">
-                <label for="nomSpec">Nom du spectacle :</label>
+        $form = '
+        <form action="" method="post">
+            <div class="form-group">
+                <label for="nomSpec">Nom du spectacle</label>
                 <input type="text" id="nomSpec" name="nomSpec" required>
-
-                <label for="style">Style musical :</label>
-                <input type="text" id="style" name="style" required>
-
-                <label for="duree">Durée (minutes) :</label>
+            </div>
+            <div class="form-group">
+                <label for="style">Style</label>
+                <select id="style" name="style" required>
+                    <option value="">Sélectionnez un style</option>';
+                    foreach ($styles as $style) {
+                        $form .= '<option value="' . $style['id_style'] . '">' . $style['nom_style'] . '</option>';
+                    }
+        $form .= '
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="duree">Durée (minutes)</label>
                 <input type="number" id="duree" name="duree" required>
-
-                <label for="description">Description :</label>
+            </div>
+            <div class="form-group">
+                <label for="description">Description</label>
                 <textarea id="description" name="description" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="artistes">Artistes (séparés par des virgules)</label>
+                <input type="text" id="artistes" name="artistes" required>
+            </div>
+            <div class="form-group">
+                <label for="soiree">Soirée</label>
+                <select id="soiree" name="soiree" required>
+                    <option value="">Sélectionnez une soirée</option>';
+                    foreach ($soirees as $soiree) {
+                        $form .= '<option value="' . $soiree['id_soiree'] . '">' . $soiree['nom_soiree'] . '</option>';
+                    }
+        $form .= '
+                </select>
+            </div>
+            <div class="form-group text-center">
+                <button type="submit" class="btn btn-primary">Ajouter le spectacle</button>
+            </div>
+        </form>';
 
-                <label for="artistes">Artistes (séparés par des virgules) :</label>
-                <input type="text" id="artistes" name="artistes">
-
-                <button type="submit">Créer le spectacle</button>
-            </form>
-        HTML;
+        return $form;
     }
 }
