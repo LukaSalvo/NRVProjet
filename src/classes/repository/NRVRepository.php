@@ -66,18 +66,9 @@ class NRVRepository {
         return $result ? $result['role'] : null;
     }
 
-    public function getAllSoirees(): array {
-        $stmt = $this->pdo->query("SELECT soiree.id_soiree, soiree.nom_soiree, lieu.nom_lieu, soiree.date 
-                               FROM soiree 
-                               INNER JOIN lieu ON soiree.id_lieu = lieu.id_lieu");
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-
-
     public function getSoireeById(int $id): ?array {
         $stmt = $this->pdo->prepare("
-            SELECT soiree.id_soiree, soiree.nom_soiree, soiree.date, soiree.annule, lieu.nom_lieu, lieu.nb_place, lieu.adresse
+            SELECT soiree.id_soiree, soiree.nom_soiree, soiree.date, soiree.annuler, lieu.nom_lieu, lieu.nb_place, lieu.adresse, lieu.code_postal
             FROM soiree 
             JOIN lieu ON soiree.id_lieu = lieu.id_lieu 
             WHERE soiree.id_soiree = :id
@@ -85,6 +76,17 @@ class NRVRepository {
         $stmt->execute(['id' => $id]);
         return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
     }
+    
+    
+    public function getAllSoirees(): array {
+        $stmt = $this->pdo->query("
+            SELECT soiree.id_soiree, soiree.nom_soiree, lieu.nom_lieu, soiree.date, soiree.annuler
+            FROM soiree 
+            INNER JOIN lieu ON soiree.id_lieu = lieu.id_lieu
+        ");
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
     
 
     public function findSpectaclesBySoireeId(int $soireeId): array {
@@ -248,10 +250,24 @@ class NRVRepository {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function updateSoiree(int $id, string $nom, string $date, string $lieu, int $nb_place): bool {
-        $stmt = $this->pdo->prepare("UPDATE soiree SET nom_soiree = :nom, date = :date, id_lieu = :lieu, nb_place = :nb_place WHERE id_soiree = :id");
-        return $stmt->execute(['id' => $id, 'nom' => $nom, 'date' => $date, 'lieu' => $lieu, 'nb_place' => $nb_place]);
+    public function updateSoiree(int $id, string $nom, string $date, string $lieu, int $nb_place, string $adresse, string $code_postal): bool {
+        $stmt = $this->pdo->prepare("
+            UPDATE soiree
+            JOIN lieu ON soiree.id_lieu = lieu.id_lieu
+            SET soiree.nom_soiree = :nom, soiree.date = :date, lieu.nom_lieu = :lieu, lieu.nb_place = :nb_place, lieu.adresse = :adresse, lieu.code_postal = :code_postal
+            WHERE soiree.id_soiree = :id
+        ");
+        return $stmt->execute([
+            'id' => $id,
+            'nom' => $nom,
+            'date' => $date,
+            'lieu' => $lieu,
+            'nb_place' => $nb_place,
+            'adresse' => $adresse,
+            'code_postal' => $code_postal
+        ]);
     }
+    
 
 
     public function getFavorisByUserId($userId) {
@@ -269,7 +285,7 @@ class NRVRepository {
     }
     
     public function cancelSoiree(int $id): bool {
-        $stmt = $this->pdo->prepare("UPDATE soiree SET status = 'annulee' WHERE id_soiree = :id");
+        $stmt = $this->pdo->prepare("UPDATE soiree SET annuler = 0 WHERE id_soiree = :id");
         return $stmt->execute(['id' => $id]);
     }
 

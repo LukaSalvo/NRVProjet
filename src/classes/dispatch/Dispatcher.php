@@ -2,6 +2,8 @@
 
 namespace iutnc\nrv\dispatch;
 
+use iutnc\nrv\action\CancelSoireeAction;
+use iutnc\nrv\action\EditSoireeAction;
 use iutnc\nrv\action\DisplayMesFavorisAction;
 use iutnc\nrv\action\EditSoireeListAction;
 use iutnc\nrv\action\AddSoireeAction;
@@ -64,6 +66,12 @@ class Dispatcher {
                 break;
             case 'editSoireeList':
                 $action = new EditSoireeListAction();
+                break;
+            case 'editSoiree':
+                $action = new EditSoireeAction();
+                break;
+            case 'cancelSoiree':
+                $action = new CancelSoireeAction();
                 break;
             default:
                 $action = new DefaultAction();

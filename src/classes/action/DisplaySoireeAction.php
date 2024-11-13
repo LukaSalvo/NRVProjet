@@ -2,7 +2,6 @@
 
 namespace iutnc\nrv\action;
 
-use iutnc\nrv\auth\Authz;
 use iutnc\nrv\repository\NRVRepository;
 
 class DisplaySoireeAction extends Action {
@@ -19,8 +18,8 @@ class DisplaySoireeAction extends Action {
                 return "<p>Soirée non trouvée.</p>";
             }
 
-            // Vérifie si la soirée est annulée
-            $statusMessage = $soiree['status'] == 0 ? "<p style='color: red; font-weight: bold;'>Cette soirée est annulée</p>" : "";
+            // Indiquer si la soirée est annulée
+            $annulationMessage = $soiree['annuler'] == 0 ? "<p><strong>Cette soirée est annulée.</strong></p>" : "";
 
             $output = "
             <!DOCTYPE html>
@@ -32,7 +31,7 @@ class DisplaySoireeAction extends Action {
             </head>
             <body>
                 <h1>Soirée à {$soiree['nom_lieu']} le {$soiree['date']}</h1>
-                $statusMessage
+                $annulationMessage
                 <h2>Liste des Spectacles</h2>
                 <ul>";
 
@@ -42,13 +41,12 @@ class DisplaySoireeAction extends Action {
 
             $output .= "</ul>";
 
+            // Affichage du lien d'ajout de spectacle pour les administrateurs
             if (isset($_SESSION['user']) && (new Authz(unserialize($_SESSION['user'])))->isAdmin()) {
-                $output .= "
-                <a href='?action=addSpectacle&soiree_id={$idSoiree}' class='btn-primary'>Ajouter un spectacle</a>";
+                $output .= "<a href='?action=addSpectacle&soiree_id={$idSoiree}' class='btn-primary'>Ajouter un spectacle</a>";
             }
 
-            $output .= "
-                <a href='?action=displaySoiree'>Retour à la liste des soirées</a>
+            $output .= "<a href='?action=displaySoiree'>Retour à la liste des soirées</a>
             </body>
             </html>";
 
@@ -58,18 +56,13 @@ class DisplaySoireeAction extends Action {
             $soirees = $repo->getAllSoirees();
             $html = "<h2>Liste des Soirées</h2><ul>";
 
+            // Marquer chaque soirée annulée dans la liste
             foreach ($soirees as $soiree) {
-                // Ajoute "Annulée" à côté du nom de la soirée si elle est annulée
-                $annuleeText = $soiree['status'] == 0 ? "<span style='color: red;'> (Annulée)</span>" : "";
-                $html .= "<li><a href='?action=displaySoiree&id_soiree={$soiree['id_soiree']}'>{$soiree['nom_lieu']} - {$soiree['date']}</a>$annuleeText</li>";
+                $status = $soiree['annuler'] == 0 ? " (Annulée)" : "";
+                $html .= "<li><a href='?action=displaySoiree&id_soiree={$soiree['id_soiree']}'>{$soiree['nom_lieu']} - {$soiree['date']}</a>{$status}</li>";
             }
-            $html .= "</ul>"
-                . "<div><button class='btt' onclick='window.location.href=\"?action=filterByDate\"'>Filtrer les soirées par date</button></div>
-                <br>
-                <button class='btt' onclick='window.location=\"?action=filterByLocation\"'>Filtrer les soirées par lieu</button></div>
-                <br>
-                <button class='btt' onclick='window.location=\"?action=filterByStyle\"'>Filtrer les soirées par style</button></div>
-                <br>";
+
+            $html .= "</ul>";
             return $html;
         }
     }
