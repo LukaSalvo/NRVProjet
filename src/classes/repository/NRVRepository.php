@@ -209,11 +209,11 @@ class NRVRepository {
         $stmt = $this->pdo->prepare("
             SELECT spectacle.id_spectacle, spectacle.nomSpec, style.nom_style AS style, spectacle.duree, soiree.date, lieu.nom_lieu 
             FROM spectacle 
-            JOIN style ON spectacle.id_style = style.id_style
-            JOIN soiree ON spectacle.id_soiree = soiree.id_soiree 
-            JOIN lieu ON soiree.id_lieu = lieu.id_lieu 
-            WHERE spectacle.id_spectacle = :id
-        ");
+            INNER JOIN style ON spectacle.id_style = style.id_style
+            INNER JOIN soiree2spectacle ON soiree2spectacle.id_spectacle = spectacle.id_spectacle
+            INNER JOIN soiree ON soiree.id_soiree = soiree2spectacle.id_soiree 
+            INNER JOIN lieu ON soiree.id_lieu = lieu.id_lieu 
+            WHERE spectacle.id_spectacle = :id");
         $stmt->execute(['id' => $id]);
         return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
     }
