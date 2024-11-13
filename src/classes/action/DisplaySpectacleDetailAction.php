@@ -41,11 +41,17 @@ class DisplaySpectacleDetailAction extends Action {
             $output .= $this->renderSimilarSection("Autres spectacles au même lieu", $similarByLocation);
             $output .= $this->renderSimilarSection("Autres spectacles du même style", $similarByStyle);
 
+            $isLiked = $this->isSpectacleLiked($spectacleId);
+            $buttonText = $isLiked ? 'Retirer des favoris' : 'Ajouter aux favoris';
+            $buttonClass = $isLiked ? 'bg-red-600 hover:bg-red-700' : 'bg-purple-600 hover:bg-purple-700';
+
             $output .= '
             <div class="mt-6">
                 <a href="?action=default" class="bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded mr-2">Retour à l\'accueil</a>
-                <a href="?action=like&id_spectacle=' . $spectacleId . '" class="bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded">Ajouter à ma liste de préférence</a>
-            </div>
+                <a href="?action=like&id_spectacle=' . $spectacleId . '" 
+                   class="' . $buttonClass . ' text-white py-2 px-4 rounded">
+                   ' . $buttonText . '
+                </a>
             </div>';
 
             return $output;
@@ -71,5 +77,12 @@ class DisplaySpectacleDetailAction extends Action {
 
         return $output;
     }
-}
 
+    private function isSpectacleLiked(int $spectacleId): bool {
+        if (!isset($_SESSION['user'])) return false;
+        
+        $repo = NRVRepository::getInstance();
+        $user = unserialize($_SESSION['user']);
+        return $repo->isSpectacleLiked($user->getId(), $spectacleId);
+    }
+}
