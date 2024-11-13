@@ -268,6 +268,20 @@ class NRVRepository {
         $stmt = $this->pdo->prepare("UPDATE soiree SET annule = 1 WHERE id_soiree = :id_soiree");
         $stmt->execute(['id_soiree' => $soireeId]);
     }
+
+
+    public function getFavorisByUserId($userId) {
+        $sql = "SELECT spectacle .nomSpec 
+                FROM spectacle 
+                INNER JOIN user2spectacleLike  ON spectacle .id_spectacle = user2spectacleLike.id_spectacle
+                WHERE user2spectacleLike.id_user = :user_id";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindParam(':user_id', $userId, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
     
     
     

@@ -8,8 +8,6 @@ class DisplaySpectacleByLocationAction extends Action {
 
     public function execute(): string {
         $repo = NRVRepository::getInstance();
-
-        // Récupère tous les lieux distincts pour le menu déroulant
         $locations = $repo->getAllLocations();
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['location'])) {

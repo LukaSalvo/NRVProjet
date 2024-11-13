@@ -9,7 +9,6 @@ use iutnc\nrv\repository\NRVRepository;
 class EditSoireeAction extends Action {
 
     public function execute(): string {
-        // Récupère l'utilisateur connecté
         try {
             $currentUser = AuthnProvider::getSignedInUser();
             $authz = new Authz($currentUser);
