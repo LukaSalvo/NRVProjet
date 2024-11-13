@@ -2,6 +2,7 @@
 
 namespace iutnc\nrv\dispatch;
 
+use iutnc\nrv\action\DisplayMesFavorisAction;
 use iutnc\nrv\action\EditSoireeListAction;
 use iutnc\nrv\action\AddSoireeAction;
 use iutnc\nrv\action\DefaultAction;
@@ -28,6 +29,9 @@ class Dispatcher {
 
     public function run(): void {
         switch ($this->action) {
+            case 'mes-favoris':
+                $action = new DisplayMesFavorisAction();
+                break;
             case 'addSoiree':
                 $action = new AddSoireeAction();
                 break;
@@ -78,9 +82,9 @@ class Dispatcher {
             try {
                 $user = unserialize($_SESSION['user']);
                 $authz = new Authz($user);
-                $isAdmin = $authz->isAdmin();  // Vérifie si l'utilisateur est admin
+                $isAdmin = $authz->isAdmin();
             } catch (\Exception $e) {
-                // Gestion des exceptions si nécessaire
+
             }
         }
 
@@ -97,11 +101,12 @@ class Dispatcher {
             <body>
                 <nav>
                     <a href="?action=default">Accueil</a>        
-                    <a href="?action=addSoiree">Soiree</a>';
+                    ';
 
         if ($user !== null) {
             $output .= '<a href="?action=logout">Se Déconnecter</a>
-                        <a href="?action=filterByLocation">Depuis une localisation</a>';
+                        <a href="?action=filterByLocation">Depuis une localisation</a>
+                        <a href="?action=mes-favoris"> Mes Spectacles favoris</a>';
             if ($isAdmin) {
                 $output .= '<a href="?action=addSoiree">Ajouter une Soirée</a>';
                 $output .= '<a href="?action=addSpectacle">Ajouter un Spectacle</a>';
