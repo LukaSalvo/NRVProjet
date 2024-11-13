@@ -117,44 +117,62 @@ class NRVRepository {
     }
 
 
-    public function createSpectacle($nomSpec, $style, $duree, $description, $artistes, $soireeId): int {
+    public function createSpectacle($nomSpec, $id_style, $duree, $description, $artistes, $soireeId): int {
+        // Insérer le spectacle dans la table spectacle
         $stmt = $this->pdo->prepare("INSERT INTO spectacle (nomSpec, id_style, duree, description) VALUES (:nom, :style, :duree, :description)");
         $stmt->execute([
             ':nom' => $nomSpec,
-            ':style' => $style,
+            ':style' => $id_style,
             ':duree' => $duree,
             ':description' => $description
         ]);
         $spectacleId = $this->pdo->lastInsertId();
     
         // Associer le spectacle à la soirée
-        $this->addSpectacleToSoiree($spectacleId, $soireeId);
+        if (!$this->addSpectacleToSoiree($spectacleId, $soireeId)) {
+            throw new \Exception("Failed to associate spectacle with soiree");
+        }
     
         // Insérer les artistes dans la table de liaison spectacle2artiste
         foreach ($artistes as $artiste) {
-            $stmt = $this->pdo->prepare("INSERT INTO spectacle2artiste (id_spectacle, artiste) VALUES (:spectacle_id, :artiste)");
+            $artiste = trim($artiste); // pour supprimer les espaces inutiles
+            $id_artiste = $this->getArtisteIdByName($artiste);
+            if (!$id_artiste) {
+                $id_artiste = $this->createArtiste($artiste);
+            }
+            $stmt = $this->pdo->prepare("INSERT INTO spectacle2artiste (id_spectacle, id_artiste) VALUES (:spectacle_id, :artiste_id)");
             $stmt->execute([
                 ':spectacle_id' => $spectacleId,
-                ':artiste' => trim($artiste) // pour supprimer les espaces inutiles
+                ':artiste_id' => $id_artiste
             ]);
         }
     
         return $spectacleId;
     }
 
+    public function getArtisteIdByName(string $artisteName): ?int {
+        $stmt = $this->pdo->prepare("SELECT id_artiste FROM artiste WHERE nom_artiste = :artiste");
+        $stmt->execute([':artiste' => $artisteName]);
+        $artisteRow = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $artisteRow ? $artisteRow['id_artiste'] : null;
+    }
+
+
+    public function createArtiste(string $artisteName): int {
+        $stmt = $this->pdo->prepare("INSERT INTO artiste (nom_artiste) VALUES (:artiste)");
+        $stmt->execute([':artiste' => $artisteName]);
+        return $this->pdo->lastInsertId();
+    }
 
 
 
 
-
-
-
-
-
-
-
-
-
+    public function getStyleIdByName(string $styleName): ?int {
+        $stmt = $this->pdo->prepare("SELECT id_style FROM style WHERE nom_style = :style");
+        $stmt->execute([':style' => $styleName]);
+        $styleRow = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $styleRow ? $styleRow['id_style'] : null;
+    }
 
     public function getPDO(): PDO {
         return $this->pdo;
@@ -307,6 +325,11 @@ class NRVRepository {
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function getStyles(): array {
+        $stmt = $this->pdo->query("SELECT id_style, nom_style FROM style");
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
     
     public function cancelSoiree(int $id): bool {
         $stmt = $this->pdo->prepare("UPDATE soiree SET status = 'annulee' WHERE id_soiree = :id");
@@ -328,5 +351,6 @@ class NRVRepository {
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    
     
 }

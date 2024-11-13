@@ -27,18 +27,21 @@ class AddSpectacleAction extends Action {
         // Traitement du formulaire d'ajout de spectacle
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['nomSpec'], $_POST['style'], $_POST['duree'], $_POST['description'], $_POST['artistes'], $_POST['soiree'])) {
             $nomSpec = $_POST['nomSpec'];
-            $style = $_POST['style'];
+            $id_style = (int)$_POST['style'];
             $duree = (int)$_POST['duree'];
             $description = $_POST['description'];
             $artistes = explode(',', $_POST['artistes']); // Liste d'artistes séparés par des virgules
             $soireeId = (int)$_POST['soiree'];
 
-            $spectacleId = $repo->createSpectacle($nomSpec, $style, $duree, $description, $artistes, $soireeId);
+            $spectacleId = $repo->createSpectacle($nomSpec, $id_style, $duree, $description, $artistes, $soireeId);
             return "<p>Spectacle ajouté avec succès ! <a href='?action=displaySpectacleDetail&id_spectacle={$spectacleId}'>Voir le spectacle</a></p>";
         }
 
         // Récupérer les soirées disponibles
         $soirees = $repo->getSoirees();
+
+        // Récupérer les styles disponibles
+        $styles = $repo->getStyles();
 
         // Formulaire de création de spectacle
         $form = '
@@ -49,7 +52,13 @@ class AddSpectacleAction extends Action {
             </div>
             <div class="form-group">
                 <label for="style">Style</label>
-                <input type="text" id="style" name="style" required>
+                <select id="style" name="style" required>
+                    <option value="">Sélectionnez un style</option>';
+                    foreach ($styles as $style) {
+                        $form .= '<option value="' . $style['id_style'] . '">' . $style['nom_style'] . '</option>';
+                    }
+        $form .= '
+                </select>
             </div>
             <div class="form-group">
                 <label for="duree">Durée (minutes)</label>
