@@ -51,7 +51,7 @@ class EditSoireeAction extends Action {
         <form action="" method="post">
             <div class="form-group">
                 <label for="nom">Nom de la soirée</label>
-                <input type="text" id="nom" name="nom" value="{$soiree['nom']}" required>
+                <input type="text" id="nom" name="nom" value="{$soiree['nom_soiree']}" required>
             </div>
             <div class="form-group">
                 <label for="date">Date</label>
@@ -59,7 +59,7 @@ class EditSoireeAction extends Action {
             </div>
             <div class="form-group">
                 <label for="lieu">Lieu</label>
-                <input type="text" id="lieu" name="lieu" value="{$soiree['lieu']}" required>
+                <input type="text" id="lieu" name="lieu" value="{$soiree['nom_lieu']}" required>
             </div>
             <div class="form-group">
                 <label for="nb_place">Nombre de places</label>
