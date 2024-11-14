@@ -1,9 +1,8 @@
 <?php
-
 namespace iutnc\nrv\action;
 
-use iutnc\nrv\auth\Authz;
 use iutnc\nrv\auth\AuthnProvider;
+use iutnc\nrv\auth\Authz;
 use iutnc\nrv\repository\NRVRepository;
 
 class EditSoireeAction extends Action {
@@ -27,12 +26,16 @@ class EditSoireeAction extends Action {
         $soireeId = (int)$_GET['id_soiree'];
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $nom = $_POST['nom'];
-            $date = $_POST['date'];
-            $lieu = $_POST['lieu'];
-            $nb_place = (int)$_POST['nb_place'];
-            $adresse = $_POST['adresse'];
-            $code_postal = $_POST['code_postal'];
+            $nom = filter_var($_POST['nom'], FILTER_SANITIZE_STRING);
+            $date = filter_var($_POST['date'], FILTER_SANITIZE_STRING);
+            $lieu = filter_var($_POST['lieu'], FILTER_SANITIZE_STRING);
+            $nb_place = filter_var($_POST['nb_place'], FILTER_VALIDATE_INT);
+            $adresse = filter_var($_POST['adresse'], FILTER_SANITIZE_STRING);
+            $code_postal = filter_var($_POST['code_postal'], FILTER_SANITIZE_STRING);
+
+            if ($nom === false || $date === false || $lieu === false || $nb_place === false || $adresse === false || $code_postal === false) {
+                return "<p class='alert alert-danger text-red-600 font-bold'>Erreur : données du formulaire invalides.</p>";
+            }
 
             $repo->updateSoiree($soireeId, $nom, $date, $lieu, $nb_place, $adresse, $code_postal);
             return "<p class='alert alert-success text-green-600 font-bold'>La soirée a été modifiée avec succès.</p>";
@@ -43,37 +46,37 @@ class EditSoireeAction extends Action {
         return $this->renderEditForm($soiree);
     }
 
-    private function renderEditForm(array $soiree): string {
-        return '
-        <div class="container bg-gradient-to-r from-purple-100 to-purple-50 p-8 rounded-lg shadow-lg">
-            <h2 class="text-3xl font-extrabold text-purple-800 mb-6 text-center">Modifier la Soirée</h2>
-            <form method="POST" action="" class="space-y-6">
-                <div class="mb-4">
-                    <label for="nom" class="block font-semibold text-gray-700">Nom de la soirée:</label>
-                    <input type="text" id="nom" name="nom" class="input-text" value="' . htmlspecialchars($soiree['nom_soiree']) . '" required>
-                </div>
-                <div class="mb-4">
-                    <label for="date" class="block font-semibold text-gray-700">Date:</label>
-                    <input type="date" id="date" name="date" class="input-text" value="' . htmlspecialchars($soiree['date']) . '" required>
-                </div>
-                <div class="mb-4">
-                    <label for="lieu" class="block font-semibold text-gray-700">Lieu:</label>
-                    <input type="text" id="lieu" name="lieu" class="input-text" value="' . htmlspecialchars($soiree['nom_lieu']) . '" required>
-                </div>
-                <div class="mb-4">
-                    <label for="nb_place" class="block font-semibold text-gray-700">Nombre de places:</label>
-                    <input type="number" id="nb_place" name="nb_place" class="input-text" value="' . (int)$soiree['nb_place'] . '" required>
-                </div>
-                <div class="mb-4">
-                    <label for="adresse" class="block font-semibold text-gray-700">Adresse :</label>
-                    <input type="text" id="adresse" name="adresse" class="input-text" value="' . htmlspecialchars($soiree['adresse']) . '" required>
-                </div>
-                <div class="mb-4">
-                    <label for="code_postal" class="block font-semibold text-gray-700">Code postal :</label>
-                    <input type="text" id="code_postal" name="code_postal" class="input-text" value="' . htmlspecialchars($soiree['code_postal']) . '" required>
-                </div>
-                <button type="submit" class="button-primary w-full">Enregistrer les modifications</button>
-            </form>
-        </div>';
+    private function renderEditForm($soiree): string {
+        return <<<HTML
+        <form action="" method="post">
+            <div class="form-group">
+                <label for="nom">Nom de la soirée</label>
+                <input type="text" id="nom" name="nom" value="{$soiree['nom']}" required>
+            </div>
+            <div class="form-group">
+                <label for="date">Date</label>
+                <input type="date" id="date" name="date" value="{$soiree['date']}" required>
+            </div>
+            <div class="form-group">
+                <label for="lieu">Lieu</label>
+                <input type="text" id="lieu" name="lieu" value="{$soiree['lieu']}" required>
+            </div>
+            <div class="form-group">
+                <label for="nb_place">Nombre de places</label>
+                <input type="number" id="nb_place" name="nb_place" value="{$soiree['nb_place']}" required>
+            </div>
+            <div class="form-group">
+                <label for="adresse">Adresse</label>
+                <input type="text" id="adresse" name="adresse" value="{$soiree['adresse']}" required>
+            </div>
+            <div class="form-group">
+                <label for="code_postal">Code postal</label>
+                <input type="text" id="code_postal" name="code_postal" value="{$soiree['code_postal']}" required>
+            </div>
+            <div class="form-group text-center">
+                <button type="submit" class="btn btn-primary">Modifier la soirée</button>
+            </div>
+        </form>
+        HTML;
     }
 }

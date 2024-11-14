@@ -11,6 +11,7 @@ class RegisterAction extends Action {
         if (isset($_POST['email'], $_POST['username'], $_POST['password'], $_POST['confirm_password'])) {
             $email = filter_var($_POST['email'],FILTER_SANITIZE_EMAIL);
             $username = htmlspecialchars(strip_tags($_POST['username']), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+            // pour pouvoir mettre des accents sur les nom, UTF-8 est utilisé
             $password = filter_var($_POST['password'],FILTER_SANITIZE_SPECIAL_CHARS);
             $confirmPassword = filter_var($_POST['confirm_password'],FILTER_SANITIZE_SPECIAL_CHARS);
 

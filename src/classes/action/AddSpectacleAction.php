@@ -26,12 +26,16 @@ class AddSpectacleAction extends Action {
 
         // Traitement du formulaire d'ajout de spectacle
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['nomSpec'], $_POST['style'], $_POST['duree'], $_POST['description'], $_POST['artistes'], $_POST['soiree'])) {
-            $nomSpec = htmlspecialchars($_POST['nomSpec']);
-            $id_style = (int)$_POST['style'];
-            $duree = (int)$_POST['duree'];
-            $description = htmlspecialchars($_POST['description']);
-            $artistes = array_map('trim', explode(',', $_POST['artistes'])); // Liste d'artistes séparés par des virgules
-            $soireeId = (int)$_POST['soiree'];
+            $nomSpec = filter_var($_POST['nomSpec'], FILTER_SANITIZE_STRING);
+            $id_style = filter_var($_POST['style'], FILTER_SANITIZE_NUMBER_INT);
+            $duree = filter_var($_POST['duree'], FILTER_SANITIZE_NUMBER_INT);
+            $description = filter_var($_POST['description'], FILTER_SANITIZE_STRING);
+            $artistes = array_map('trim', explode(',', filter_var($_POST['artistes'], FILTER_SANITIZE_STRING))); // Liste d'artistes séparés par des virgules
+            $soireeId = filter_var($_POST['soiree'], FILTER_SANITIZE_NUMBER_INT);
+
+            if ($nomSpec === false || $id_style === false || $duree === false || $description === false || $soireeId === false) {
+                return "<p>Erreur : données du formulaire invalides.</p>";
+            }
 
             try {
                 $spectacleId = $repo->createSpectacle($nomSpec, $id_style, $duree, $description, $artistes, $soireeId);
