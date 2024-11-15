@@ -9,88 +9,74 @@ use iutnc\nrv\repository\NRVRepository;
 class AddSpectacleAction extends Action {
 
     public function execute(): string {
-        // Récupère l'utilisateur connecté
         try {
             $currentUser = AuthnProvider::getSignedInUser();
             $authz = new Authz($currentUser);
 
-            // Vérifie si l'utilisateur est un administrateur
             if (!$authz->isAdmin()) {
-                return "<p>Accès refusé : vous n'avez pas les droits nécessaires pour accéder à cette page.</p>";
+                return "<p class='alert alert-danger'>Accès refusé : droits administrateur nécessaires.</p>";
             }
         } catch (\Exception $e) {
-            return "<p>Erreur : " . $e->getMessage() . "</p>";
+            return "<p class='alert alert-danger'>Erreur : " . $e->getMessage() . "</p>";
         }
 
         $repo = NRVRepository::getInstance();
 
         // Traitement du formulaire d'ajout de spectacle
-        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['nomSpec'], $_POST['style'], $_POST['duree'], $_POST['description'], $_POST['artistes'], $_POST['soiree'])) {
-            $nomSpec = htmlspecialchars($_POST['nomSpec']);
-            $id_style = (int)$_POST['style'];
-            $duree = (int)$_POST['duree'];
-            $description = htmlspecialchars($_POST['description']);
-            $artistes = array_map('trim', explode(',', $_POST['artistes'])); // Liste d'artistes séparés par des virgules
-            $soireeId = (int)$_POST['soiree'];
-
-            try {
-                $spectacleId = $repo->createSpectacle($nomSpec, $id_style, $duree, $description, $artistes, $soireeId);
-                return "<p>Spectacle ajouté avec succès ! <a href='?action=displaySpectacleDetail&id_spectacle={$spectacleId}'>Voir le spectacle</a></p>";
-            } catch (\PDOException $e) {
-                return "<p>Erreur lors de l'ajout du spectacle : " . $e->getMessage() . "</p>";
-            }
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['nomSpec'], $_POST['style'], $_POST['duree'], $_POST['artistes'], $_POST['soiree'])) {
+            return $this->addSpectacle($repo);
         }
 
-        // Récupérer les soirées disponibles
+        // Récupération des options
         $soirees = $repo->getSoirees();
-
-        // Récupérer les styles disponibles
         $styles = $repo->getStyles();
 
-        // Formulaire de création de spectacle
-        $form = '
-        <form action="" method="post">
-            <div class="form-group">
-                <label for="nomSpec">Nom du spectacle</label>
-                <input type="text" id="nomSpec" name="nomSpec" required>
-            </div>
-            <div class="form-group">
-                <label for="style">Style</label>
-                <select id="style" name="style" required>
-                    <option value="">Sélectionnez un style</option>';
-                    foreach ($styles as $style) {
-                        $form .= '<option value="' . $style['id_style'] . '">' . $style['nom_style'] . '</option>';
-                    }
-        $form .= '
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="duree">Durée (minutes)</label>
-                <input type="number" id="duree" name="duree" required>
-            </div>
-            <div class="form-group">
-                <label for="description">Description</label>
-                <textarea id="description" name="description" required></textarea>
-            </div>
-            <div class="form-group">
-                <label for="artistes">Artistes (séparés par des virgules)</label>
-                <input type="text" id="artistes" name="artistes" required>
-            </div>
-            <div class="form-group">
-                <label for="soiree">Soirée</label>
-                <select id="soiree" name="soiree" required>
-                    <option value="">Sélectionnez une soirée</option>';
-                    foreach ($soirees as $soiree) {
-                        $form .= '<option value="' . $soiree['id_soiree'] . '">' . $soiree['nom_soiree'] . '</option>';
-                    }
-        $form .= '
-                </select>
-            </div>
-            <div class="form-group text-center">
-                <button type="submit" class="btn btn-primary">Ajouter le spectacle</button>
-            </div>
-        </form>';
+        // Formulaire
+        return $this->renderForm($styles, $soirees);
+    }
 
+    private function renderForm(array $styles, array $soirees): string {
+        $form = '
+        <div class="max-w-3xl mx-auto bg-white shadow-lg rounded-lg p-8">
+            <h2 class="text-2xl font-bold text-purple-700 mb-6">Ajouter un Spectacle</h2>
+            <form action="" method="post" class="space-y-6">
+                <div>
+                    <label for="nomSpec" class="block text-gray-700 font-semibold mb-2">Nom du spectacle</label>
+                    <input type="text" id="nomSpec" name="nomSpec" required class="input-text">
+                </div>
+                <div>
+                    <label for="style" class="block text-gray-700 font-semibold mb-2">Style</label>
+                    <select id="style" name="style" required class="select-dropdown">
+                        <option value="">Sélectionnez un style</option>';
+                        foreach ($styles as $style) {
+                            $form .= '<option value="' . $style['id_style'] . '">' . htmlspecialchars($style['nom_style']) . '</option>';
+                        }
+        $form .= '
+                    </select>
+                </div>
+                <div>
+                    <label for="duree" class="block text-gray-700 font-semibold mb-2">Durée (minutes)</label>
+                    <input type="number" id="duree" name="duree" required class="input-text">
+                </div>
+                <div>
+                    <label for="artistes" class="block text-gray-700 font-semibold mb-2">Artistes (séparés par des virgules)</label>
+                    <input type="text" id="artistes" name="artistes" required class="input-text">
+                </div>
+                <div>
+                    <label for="soiree" class="block text-gray-700 font-semibold mb-2">Soirée</label>
+                    <select id="soiree" name="soiree" required class="select-dropdown">
+                        <option value="">Sélectionnez une soirée</option>';
+                        foreach ($soirees as $soiree) {
+                            $form .= '<option value="' . $soiree['id_soiree'] . '">' . htmlspecialchars($soiree['nom_soiree']) . '</option>';
+                        }
+        $form .= '
+                    </select>
+                </div>
+                <div class="text-center">
+                    <button type="submit" class="button-primary">Ajouter le spectacle</button>
+                </div>
+            </form>
+        </div>';
         return $form;
     }
 
@@ -98,13 +84,12 @@ class AddSpectacleAction extends Action {
         $nomSpec = htmlspecialchars($_POST['nomSpec']);
         $id_style = (int)$_POST['style'];
         $duree = (int)$_POST['duree'];
-        $description = htmlspecialchars($_POST['description']);
-        $artistes = array_map('trim', explode(',', $_POST['artistes'])); // Liste d'artistes séparés par des virgules
+        $artistes = array_map('trim', explode(',', $_POST['artistes']));
         $soireeId = (int)$_POST['soiree'];
 
         try {
-            $spectacleId = $repo->createSpectacle($nomSpec, $id_style, $duree, $description, $artistes, $soireeId);
-            return "<p class='alert alert-success'>Spectacle ajouté avec succès ! <a href='?action=displaySpectacleDetail&id_spectacle={$spectacleId}'>Voir le spectacle</a></p>";
+            $spectacleId = $repo->createSpectacle($nomSpec, $id_style, $duree, $artistes, $soireeId);
+            return "<p class='alert alert-success'>Spectacle ajouté avec succès ! <a href='?action=displaySpectacleDetail&id_spectacle={$spectacleId}' class='text-blue-500 underline'>Voir le spectacle</a></p>";
         } catch (\PDOException $e) {
             return "<p class='alert alert-danger'>Erreur lors de l'ajout du spectacle : " . $e->getMessage() . "</p>";
         }

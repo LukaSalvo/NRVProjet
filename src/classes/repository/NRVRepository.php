@@ -119,30 +119,38 @@ class NRVRepository {
     }
 
 
-    public function createSpectacle($nomSpec, $id_style, $duree, $description, $artistes, $soireeId): int {
+    public function createSpectacle($nomSpec, $id_style, $duree, $artistes, $soireeId): int {
+        // Vérifiez que l'ID de la soirée existe dans la table 'soiree'
+        $soireeExists = $this->pdo->prepare("SELECT COUNT(*) FROM soiree WHERE id_soiree = :id_soiree");
+        $soireeExists->execute([':id_soiree' => $soireeId]);
+        if ($soireeExists->fetchColumn() == 0) {
+            throw new \Exception("La soirée spécifiée n'existe pas.");
+        }
+    
         // Insérer le spectacle dans la table spectacle
-        $stmt = $this->pdo->prepare("INSERT INTO spectacle (nomSpec, id_style, duree, description) VALUES (:nom, :style, :duree, :description)");
+        $stmt = $this->pdo->prepare("
+            INSERT INTO spectacle (nomSpec, id_style, duree, id_soiree) 
+            VALUES (:nom, :style, :duree, :id_soiree)
+        ");
         $stmt->execute([
             ':nom' => $nomSpec,
             ':style' => $id_style,
             ':duree' => $duree,
-            ':description' => $description
+            ':id_soiree' => $soireeId
         ]);
         $spectacleId = $this->pdo->lastInsertId();
     
-        // Associer le spectacle à la soirée
-        if (!$this->addSpectacleToSoiree($spectacleId, $soireeId)) {
-            throw new \Exception("Failed to associate spectacle with soiree");
-        }
-    
         // Insérer les artistes dans la table de liaison spectacle2artiste
         foreach ($artistes as $artiste) {
-            $artiste = trim($artiste); // pour supprimer les espaces inutiles
+            $artiste = trim($artiste); // Supprimer les espaces inutiles
             $id_artiste = $this->getArtisteIdByName($artiste);
             if (!$id_artiste) {
                 $id_artiste = $this->createArtiste($artiste);
             }
-            $stmt = $this->pdo->prepare("INSERT INTO spectacle2artiste (id_spectacle, id_artiste) VALUES (:spectacle_id, :artiste_id)");
+            $stmt = $this->pdo->prepare("
+                INSERT INTO spectacle2artiste (id_spectacle, id_artiste) 
+                VALUES (:spectacle_id, :artiste_id)
+            ");
             $stmt->execute([
                 ':spectacle_id' => $spectacleId,
                 ':artiste_id' => $id_artiste
@@ -151,6 +159,8 @@ class NRVRepository {
     
         return $spectacleId;
     }
+    
+    
 
     public function getArtisteIdByName(string $artisteName): ?int {
         $stmt = $this->pdo->prepare("SELECT id_artiste FROM artiste WHERE nom_artiste = :artiste");
