@@ -57,9 +57,9 @@ class AddSoireeAction extends Action {
     }
 
     private function addSoiree(): string {
-        $nom = htmlspecialchars($_POST['nom']);
-        $date = $_POST['date'];
-        $id_lieu = (int)$_POST['lieu'];
+        $nom = filter_var(htmlspecialchars($_POST['nom']), FILTER_SANITIZE_SPECIAL_CHARS);
+        $date = filter_var($_POST['date'], FILTER_SANITIZE_SPECIAL_CHARS);
+        $id_lieu = filter_var($_POST['lieu'], FILTER_VALIDATE_INT);
 
         try {
             $repo = NRVRepository::getInstance();
