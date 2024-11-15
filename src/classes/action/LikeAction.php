@@ -8,9 +8,12 @@ use iutnc\nrv\repository\NRVRepository;
 class LikeAction extends Action {
 
     private Authz $a;
+    private $pdo;
 
     public function __construct() {
         parent::__construct();
+        $repo = NRVRepository::getInstance();
+        $this->pdo = $repo->getPDO();
         try {
             $user = AuthnProvider::getSignedInUser();
             $this->a = new Authz($user);
