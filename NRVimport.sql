@@ -24,7 +24,7 @@ CREATE TABLE `artiste` (
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
 	`id_user` INT NOT NULL AUTO_INCREMENT,
-	`nom_user` VARCHAR(200),
+	`nom_user` VARCHAR(200) NOT NULL,
 	`email` VARCHAR(256) NOT NULL,
 	`password` VARCHAR(256) NOT NULL,
 	`role` INT NOT NULL DEFAULT 1,

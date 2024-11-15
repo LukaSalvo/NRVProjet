@@ -48,35 +48,36 @@ class EditSoireeAction extends Action {
 
     private function renderEditForm($soiree): string {
         return <<<HTML
-        <form action="" method="post">
-            <div class="form-group">
-                <label for="nom">Nom de la soirée</label>
-                <input type="text" id="nom" name="nom" value="{$soiree['nom_soiree']}" required>
-            </div>
-            <div class="form-group">
-                <label for="date">Date</label>
-                <input type="date" id="date" name="date" value="{$soiree['date']}" required>
-            </div>
-            <div class="form-group">
-                <label for="lieu">Lieu</label>
-                <input type="text" id="lieu" name="lieu" value="{$soiree['nom_lieu']}" required>
-            </div>
-            <div class="form-group">
-                <label for="nb_place">Nombre de places</label>
-                <input type="number" id="nb_place" name="nb_place" value="{$soiree['nb_place']}" required>
-            </div>
-            <div class="form-group">
-                <label for="adresse">Adresse</label>
-                <input type="text" id="adresse" name="adresse" value="{$soiree['adresse']}" required>
-            </div>
-            <div class="form-group">
-                <label for="code_postal">Code postal</label>
-                <input type="text" id="code_postal" name="code_postal" value="{$soiree['code_postal']}" required>
-            </div>
-            <div class="form-group text-center">
-                <button type="submit" class="btn btn-primary">Modifier la soirée</button>
-            </div>
-        </form>
+        <div class="container mx-auto my-8 p-6 bg-white shadow-lg rounded-lg">
+            <h2 class="text-2xl font-semibold text-purple-700 mb-4">Modifier la Soirée</h2>
+            <form method="POST" action="">
+                <div class="mb-4">
+                    <label for="nom" class="block text-gray-700">Nom de la soirée:</label>
+                    <input type="text" id="nom" name="nom" class="w-full border border-gray-300 p-2 rounded" value="{$soiree['nom_soiree']}" required>
+                </div>
+                <div class="mb-4">
+                    <label for="date" class="block text-gray-700">Date:</label>
+                    <input type="date" id="date" name="date" class="w-full border border-gray-300 p-2 rounded" value="{$soiree['date']}" required>
+                </div>
+                <div class="mb-4">
+                    <label for="lieu" class="block text-gray-700">Lieu:</label>
+                    <input type="text" id="lieu" name="lieu" class="w-full border border-gray-300 p-2 rounded" value="{$soiree['nom_lieu']}" required>
+                </div>
+                <div class="mb-4">
+                    <label for="nb_place" class="block text-gray-700">Nombre de places:</label>
+                    <input type="number" id="nb_place" name="nb_place" class="w-full border border-gray-300 p-2 rounded" value="{$soiree['nb_place']}" required>
+                </div>
+                <div class="mb-4">
+                    <label for="adresse" class="block text-gray-700">Adresse:</label>
+                    <input type="text" id="adresse" name="adresse" class="w-full border border-gray-300 p-2 rounded" value="{$soiree['adresse']}" required>
+                </div>
+                <div class="mb-4">
+                    <label for="code_postal" class="block text-gray-700">Code postal:</label>
+                    <input type="text" id="code_postal" name="code_postal" class="w-full border border-gray-300 p-2 rounded" value="{$soiree['code_postal']}" required>
+                </div>
+                <button type="submit" class="bg-purple-700 text-white py-2 px-4 rounded hover:bg-purple-800">Modifier</button>
+            </form>
+        </div>
         HTML;
     }
 }
