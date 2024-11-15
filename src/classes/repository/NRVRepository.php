@@ -114,13 +114,13 @@ class NRVRepository {
     
 
     public function addSpectacleToSoiree(int $spectacleId, int $soireeId): bool {
-        $stmt = $this->pdo->prepare("INSERT INTO soiree2spectacle (id_soiree, id_spectacle) VALUES (:soireeId, :spectacleId)");
-        return $stmt->execute(['soireeId' => $soireeId, 'spectacleId' => $spectacleId]);
+        $stmt = $this->pdo->prepare("INSERT INTO soiree2spectacle (id_spectacle,id_soiree) VALUES (:spectacleId,:soireeId)");
+        return $stmt->execute(['spectacleId' => $spectacleId,'soireeId' => $soireeId]);
     }
 
 
     public function createSpectacle($nomSpec, $id_style, $duree, $artistes, $soireeId): int {
-        // Vérifiez que l'ID de la soirée existe dans la table 'soiree'
+        // Vérifie que l'ID de la soirée existe dans la table 'soiree'
         $soireeExists = $this->pdo->prepare("SELECT COUNT(*) FROM soiree WHERE id_soiree = :id_soiree");
         $soireeExists->execute([':id_soiree' => $soireeId]);
         if ($soireeExists->fetchColumn() == 0) {
@@ -129,16 +129,17 @@ class NRVRepository {
     
         // Insérer le spectacle dans la table spectacle
         $stmt = $this->pdo->prepare("
-            INSERT INTO spectacle (nomSpec, id_style, duree, id_soiree) 
-            VALUES (:nom, :style, :duree, :id_soiree)
+            INSERT INTO spectacle (nomSpec, id_style, duree) 
+            VALUES (:nom, :style, :duree)
         ");
         $stmt->execute([
             ':nom' => $nomSpec,
             ':style' => $id_style,
             ':duree' => $duree,
-            ':id_soiree' => $soireeId
+    
         ]);
         $spectacleId = $this->pdo->lastInsertId();
+        $this->addSpectacleToSoiree($spectacleId,$soireeId);
     
         // Insérer les artistes dans la table de liaison spectacle2artiste
         foreach ($artistes as $artiste) {
@@ -414,9 +415,10 @@ class NRVRepository {
     public function getSpectaclesBySoireeId(int $id_soiree): array {
         $stmt = $this->pdo->prepare("
             SELECT s.nomSpec, s.duree, st.nom_style 
-            FROM spectacle s
+            FROM soiree2spectacle ss
+            JOIN spectacle s ON ss.id_spectacle = s.id_spectacle
             JOIN style st ON s.id_style = st.id_style
-            WHERE s.id_soiree = :id_soiree
+            WHERE ss.id_soiree = :id_soiree
         ");
         $stmt->execute([':id_soiree' => $id_soiree]);
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);

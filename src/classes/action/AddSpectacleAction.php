@@ -48,7 +48,7 @@ class AddSpectacleAction extends Action {
                 <div class="mb-4">
                     <label for="style" class="block text-gray-700">Style :</label>
                     <select id="style" name="style" class="w-full border border-gray-300 p-2 rounded" required>
-                        <option value="">Sélectionnez un style</option>';
+                        <option value="" disabled selected>Sélectionnez un style</option>';
                         foreach ($styles as $style) {
                             $form .= '<option value="' . $style['id_style'] . '">' . htmlspecialchars($style['nom_style']) . '</option>';
                         }
@@ -62,7 +62,7 @@ class AddSpectacleAction extends Action {
                 <div class="mb-4">
                     <label for="artistes" class="block text-gray-700">Artistes existants :</label>
                     <select id="artistes" name="artistes[]" class="w-full border border-gray-300 p-2 rounded" multiple>
-                        <option value="">Sélectionnez un ou plusieurs artistes</option>';
+                        <option value="" disabled selected>Sélectionnez un ou plusieurs artistes</option>';
                         foreach ($artistes as $artiste) {
                             $form .= '<option value="' . $artiste['id_artiste'] . '">' . htmlspecialchars($artiste['nom_artiste']) . '</option>';
                         }
@@ -91,14 +91,14 @@ class AddSpectacleAction extends Action {
     }
 
     private function addSpectacle(NRVRepository $repo): string {
-        $nomSpec = htmlspecialchars($_POST['nomSpec']);
+        $nomSpec = filter_var(htmlspecialchars($_POST['nomSpec']),FILTER_SANITIZE_SPECIAL_CHARS);
         $id_style = (int)$_POST['style'];
-        $duree = (int)$_POST['duree'];
         $soireeId = (int)$_POST['soiree'];
+        $duree = filter_var($_POST['duree'],FILTER_VALIDATE_INT);
         $artistes = $_POST['artistes'] ?? []; // Artistes existants
 
         // Gestion du nouvel artiste
-        $newArtiste = trim($_POST['newArtiste'] ?? '');
+        $newArtiste = filter_var(htmlspecialchars(trim($_POST['newArtiste'] ?? ''),FILTER_SANITIZE_SPECIAL_CHARS))  ;
         if (!empty($newArtiste)) {
             try {
                 $newArtisteId = $repo->createArtiste($newArtiste); // Ajout à la base de données
