@@ -94,20 +94,9 @@ class AddSpectacleAction extends Action {
         $nomSpec = htmlspecialchars($_POST['nomSpec']);
         $id_style = (int)$_POST['style'];
         $duree = (int)$_POST['duree'];
+        $artistes = array_map('trim', $_POST['artistes']); // Liste des ID artistes sélectionnés
         $soireeId = (int)$_POST['soiree'];
-        $artistes = $_POST['artistes'] ?? []; // Artistes existants
-
-        // Gestion du nouvel artiste
-        $newArtiste = trim($_POST['newArtiste'] ?? '');
-        if (!empty($newArtiste)) {
-            try {
-                $newArtisteId = $repo->createArtiste($newArtiste); // Ajout à la base de données
-                $artistes[] = $newArtisteId; // Ajout de l'ID à la liste
-            } catch (\PDOException $e) {
-                return "<p class='text-red-500 text-center'>Erreur lors de l'ajout du nouvel artiste : " . $e->getMessage() . "</p>";
-            }
-        }
-
+    
         try {
             $spectacleId = $repo->createSpectacle($nomSpec, $id_style, $duree, $artistes, $soireeId);
             return "<p class='text-green-500 text-center'>Spectacle ajouté avec succès ! <a href='?action=displaySpectacleDetail&id_spectacle={$spectacleId}' class='text-blue-500 underline'>Voir le spectacle</a></p>";
@@ -115,4 +104,5 @@ class AddSpectacleAction extends Action {
             return "<p class='text-red-500 text-center'>Erreur lors de l'ajout du spectacle : " . $e->getMessage() . "</p>";
         }
     }
+    
 }
