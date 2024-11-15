@@ -23,6 +23,15 @@ class AddSoireeAction extends Action {
     }
 
     private function displayForm(): string {
+        $repo = NRVRepository::getInstance();
+        $lieux = $repo->getLieux(); // Retrieve available locations
+
+        // Generate dropdown options for locations
+        $lieuOptions = '';
+        foreach ($lieux as $lieu) {
+            $lieuOptions .= '<option value="' . $lieu['id_lieu'] . '">' . htmlspecialchars($lieu['nom_lieu']) . ' - ' . htmlspecialchars($lieu['adresse']) . '</option>';
+        }
+
         return '
         <div class="container mx-auto my-8 p-6 bg-white shadow-lg rounded-lg">
             <h2 class="text-2xl font-semibold text-purple-700 mb-4">Ajouter une Soirée</h2>
@@ -37,22 +46,29 @@ class AddSoireeAction extends Action {
                 </div>
                 <div class="mb-4">
                     <label for="lieu" class="block text-gray-700">Lieu:</label>
-                    <input type="text" id="lieu" name="lieu" class="w-full border border-gray-300 p-2 rounded" required>
-                </div>
-                <div class="mb-4">
-                    <label for="nb_place" class="block text-gray-700">Nombre de places:</label>
-                    <input type="number" id="nb_place" name="nb_place" class="w-full border border-gray-300 p-2 rounded" required>
-                </div>
-                <div class="mb-4">
-                    <label for="nom_emplacement" class="block text-gray-700">Nom de l\'emplacement:</label>
-                    <input type="text" id="nom_emplacement" name="nom_emplacement" class="w-full border border-gray-300 p-2 rounded" required>
-                </div>
-                <div class="mb-4">
-                    <label for="code_postal" class="block text-gray-700">Code postal:</label>
-                    <input type="number" id="code_postal" name="code_postal" class="w-full border border-gray-300 p-2 rounded" required>
+                    <select id="lieu" name="lieu" class="w-full border border-gray-300 p-2 rounded" required>
+                        <option value="">Sélectionnez un lieu</option>
+                        ' . $lieuOptions . '
+                    </select>
                 </div>
                 <button type="submit" class="bg-purple-700 text-white py-2 px-4 rounded hover:bg-purple-800">Ajouter</button>
             </form>
         </div>';
     }
+
+    private function addSoiree(): string {
+        $nom = htmlspecialchars($_POST['nom']);
+        $date = $_POST['date'];
+        $id_lieu = (int)$_POST['lieu'];
+
+        try {
+            $repo = NRVRepository::getInstance();
+            $repo->createSoiree($nom, $id_lieu, $date); // Use repository method to insert soirée
+            return "<p class='text-green-500 text-center'>La soirée a été ajoutée avec succès !</p>";
+        } catch (\PDOException $e) {
+            return "<p class='text-red-500 text-center'>Erreur lors de l'ajout de la soirée : " . $e->getMessage() . "</p>";
+        }
+    }
 }
+
+

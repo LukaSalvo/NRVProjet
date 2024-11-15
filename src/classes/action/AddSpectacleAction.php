@@ -14,39 +14,40 @@ class AddSpectacleAction extends Action {
             $authz = new Authz($currentUser);
 
             if (!$authz->isAdmin()) {
-                return "<p class='alert alert-danger'>Accès refusé : droits administrateur nécessaires.</p>";
+                return "<p class='text-red-500 text-center'>Accès refusé : droits administrateur nécessaires.</p>";
             }
         } catch (\Exception $e) {
-            return "<p class='alert alert-danger'>Erreur : " . $e->getMessage() . "</p>";
+            return "<p class='text-red-500 text-center'>Erreur : " . $e->getMessage() . "</p>";
         }
 
         $repo = NRVRepository::getInstance();
 
-        // Traitement du formulaire d'ajout de spectacle
-        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['nomSpec'], $_POST['style'], $_POST['duree'], $_POST['artistes'], $_POST['soiree'])) {
-            return $this->addSpectacle($repo);
+        // Gestion du formulaire d'ajout
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            return $this->addSpectacle($repo); // Correction ici : nom de la méthode.
         }
 
-        // Récupération des options
+        // Récupération des options pour le formulaire
         $soirees = $repo->getSoirees();
         $styles = $repo->getStyles();
+        $artistes = $repo->getArtistes();
 
-        // Formulaire
-        return $this->renderForm($styles, $soirees);
+        // Affichage du formulaire
+        return $this->renderForm($styles, $soirees, $artistes);
     }
 
-    private function renderForm(array $styles, array $soirees): string {
+    private function renderForm(array $styles, array $soirees, array $artistes): string {
         $form = '
-        <div class="max-w-3xl mx-auto bg-white shadow-lg rounded-lg p-8">
-            <h2 class="text-2xl font-bold text-purple-700 mb-6">Ajouter un Spectacle</h2>
-            <form action="" method="post" class="space-y-6">
-                <div>
-                    <label for="nomSpec" class="block text-gray-700 font-semibold mb-2">Nom du spectacle</label>
-                    <input type="text" id="nomSpec" name="nomSpec" required class="input-text">
+        <div class="container mx-auto my-8 p-6 bg-white shadow-lg rounded-lg">
+            <h2 class="text-2xl font-semibold text-purple-700 mb-4">Ajouter un Spectacle</h2>
+            <form method="POST" action="">
+                <div class="mb-4">
+                    <label for="nomSpec" class="block text-gray-700">Nom du spectacle :</label>
+                    <input type="text" id="nomSpec" name="nomSpec" class="w-full border border-gray-300 p-2 rounded" required>
                 </div>
-                <div>
-                    <label for="style" class="block text-gray-700 font-semibold mb-2">Style</label>
-                    <select id="style" name="style" required class="select-dropdown">
+                <div class="mb-4">
+                    <label for="style" class="block text-gray-700">Style :</label>
+                    <select id="style" name="style" class="w-full border border-gray-300 p-2 rounded" required>
                         <option value="">Sélectionnez un style</option>';
                         foreach ($styles as $style) {
                             $form .= '<option value="' . $style['id_style'] . '">' . htmlspecialchars($style['nom_style']) . '</option>';
@@ -54,17 +55,28 @@ class AddSpectacleAction extends Action {
         $form .= '
                     </select>
                 </div>
-                <div>
-                    <label for="duree" class="block text-gray-700 font-semibold mb-2">Durée (minutes)</label>
-                    <input type="number" id="duree" name="duree" required class="input-text">
+                <div class="mb-4">
+                    <label for="duree" class="block text-gray-700">Durée (minutes) :</label>
+                    <input type="number" id="duree" name="duree" class="w-full border border-gray-300 p-2 rounded" required>
                 </div>
-                <div>
-                    <label for="artistes" class="block text-gray-700 font-semibold mb-2">Artistes (séparés par des virgules)</label>
-                    <input type="text" id="artistes" name="artistes" required class="input-text">
+                <div class="mb-4">
+                    <label for="artistes" class="block text-gray-700">Artistes existants :</label>
+                    <select id="artistes" name="artistes[]" class="w-full border border-gray-300 p-2 rounded" multiple>
+                        <option value="">Sélectionnez un ou plusieurs artistes</option>';
+                        foreach ($artistes as $artiste) {
+                            $form .= '<option value="' . $artiste['id_artiste'] . '">' . htmlspecialchars($artiste['nom_artiste']) . '</option>';
+                        }
+        $form .= '
+                    </select>
+                    <small class="text-gray-500">Maintenez Ctrl (Windows) ou Commande (Mac) pour sélectionner plusieurs artistes.</small>
                 </div>
-                <div>
-                    <label for="soiree" class="block text-gray-700 font-semibold mb-2">Soirée</label>
-                    <select id="soiree" name="soiree" required class="select-dropdown">
+                <div class="mb-4">
+                    <label for="newArtiste" class="block text-gray-700">Artiste inexistant ?</label>
+                    <input type="text" id="newArtiste" name="newArtiste" class="w-full border border-gray-300 p-2 rounded" placeholder="Entrez le nom du nouvel artiste">
+                </div>
+                <div class="mb-4">
+                    <label for="soiree" class="block text-gray-700">Soirée associée :</label>
+                    <select id="soiree" name="soiree" class="w-full border border-gray-300 p-2 rounded" required>
                         <option value="">Sélectionnez une soirée</option>';
                         foreach ($soirees as $soiree) {
                             $form .= '<option value="' . $soiree['id_soiree'] . '">' . htmlspecialchars($soiree['nom_soiree']) . '</option>';
@@ -72,9 +84,7 @@ class AddSpectacleAction extends Action {
         $form .= '
                     </select>
                 </div>
-                <div class="text-center">
-                    <button type="submit" class="button-primary">Ajouter le spectacle</button>
-                </div>
+                <button type="submit" class="bg-purple-700 text-white py-2 px-4 rounded hover:bg-purple-800">Ajouter le spectacle</button>
             </form>
         </div>';
         return $form;
@@ -84,14 +94,25 @@ class AddSpectacleAction extends Action {
         $nomSpec = htmlspecialchars($_POST['nomSpec']);
         $id_style = (int)$_POST['style'];
         $duree = (int)$_POST['duree'];
-        $artistes = array_map('trim', explode(',', $_POST['artistes']));
         $soireeId = (int)$_POST['soiree'];
+        $artistes = $_POST['artistes'] ?? []; // Artistes existants
+
+        // Gestion du nouvel artiste
+        $newArtiste = trim($_POST['newArtiste'] ?? '');
+        if (!empty($newArtiste)) {
+            try {
+                $newArtisteId = $repo->createArtiste($newArtiste); // Ajout à la base de données
+                $artistes[] = $newArtisteId; // Ajout de l'ID à la liste
+            } catch (\PDOException $e) {
+                return "<p class='text-red-500 text-center'>Erreur lors de l'ajout du nouvel artiste : " . $e->getMessage() . "</p>";
+            }
+        }
 
         try {
             $spectacleId = $repo->createSpectacle($nomSpec, $id_style, $duree, $artistes, $soireeId);
-            return "<p class='alert alert-success'>Spectacle ajouté avec succès ! <a href='?action=displaySpectacleDetail&id_spectacle={$spectacleId}' class='text-blue-500 underline'>Voir le spectacle</a></p>";
+            return "<p class='text-green-500 text-center'>Spectacle ajouté avec succès ! <a href='?action=displaySpectacleDetail&id_spectacle={$spectacleId}' class='text-blue-500 underline'>Voir le spectacle</a></p>";
         } catch (\PDOException $e) {
-            return "<p class='alert alert-danger'>Erreur lors de l'ajout du spectacle : " . $e->getMessage() . "</p>";
+            return "<p class='text-red-500 text-center'>Erreur lors de l'ajout du spectacle : " . $e->getMessage() . "</p>";
         }
     }
 }

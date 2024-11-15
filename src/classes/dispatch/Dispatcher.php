@@ -2,6 +2,7 @@
 
 namespace iutnc\nrv\dispatch;
 
+use iutnc\nrv\action\DisplaySoireeDetailAction;
 use iutnc\nrv\action\UncancelSoireeAction;
 use iutnc\nrv\action\CancelSoireeAction;
 use iutnc\nrv\action\EditSoireeAction;
@@ -80,6 +81,9 @@ class Dispatcher {
             case 'uncancelSoiree':
                 $action = new UncancelSoireeAction();
                 break;
+            case 'displaySoireeDetail':
+                $action = new DisplaySoireeDetailAction();
+                break;            
             default:
                 $action = new DefaultAction();
                 break;
