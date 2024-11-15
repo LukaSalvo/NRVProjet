@@ -91,20 +91,14 @@ class AddSpectacleAction extends Action {
     }
 
     private function addSpectacle(NRVRepository $repo): string {
-        $nomSpec = filter_var(htmlspecialchars($_POST['nomSpec']),FILTER_SANITIZE_SPECIAL_CHARS);
+        $nomSpec = htmlspecialchars($_POST['nomSpec']);
         $id_style = (int)$_POST['style'];
-<<<<<<< HEAD
         $duree = (int)$_POST['duree'];
-        $artistes = array_map('trim', $_POST['artistes']); // Liste des ID artistes sélectionnés
         $soireeId = (int)$_POST['soiree'];
-    
-=======
-        $soireeId = (int)$_POST['soiree'];
-        $duree = filter_var($_POST['duree'],FILTER_VALIDATE_INT);
         $artistes = $_POST['artistes'] ?? []; // Artistes existants
 
         // Gestion du nouvel artiste
-        $newArtiste = filter_var(htmlspecialchars(trim($_POST['newArtiste'] ?? ''),FILTER_SANITIZE_SPECIAL_CHARS))  ;
+        $newArtiste = trim($_POST['newArtiste'] ?? '');
         if (!empty($newArtiste)) {
             try {
                 $newArtisteId = $repo->createArtiste($newArtiste); // Ajout à la base de données
@@ -114,7 +108,6 @@ class AddSpectacleAction extends Action {
             }
         }
 
->>>>>>> 9f8b9ce0ef788337b17b44fe19c83e876aee6cc3
         try {
             $spectacleId = $repo->createSpectacle($nomSpec, $id_style, $duree, $artistes, $soireeId);
             return "<p class='text-green-500 text-center'>Spectacle ajouté avec succès ! <a href='?action=displaySpectacleDetail&id_spectacle={$spectacleId}' class='text-blue-500 underline'>Voir le spectacle</a></p>";
@@ -122,5 +115,4 @@ class AddSpectacleAction extends Action {
             return "<p class='text-red-500 text-center'>Erreur lors de l'ajout du spectacle : " . $e->getMessage() . "</p>";
         }
     }
-    
 }
