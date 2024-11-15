@@ -1,4 +1,5 @@
 <?php
+
 namespace iutnc\nrv\action;
 
 use iutnc\nrv\auth\Authz;
@@ -17,7 +18,6 @@ class AddSpectacleAction extends Action {
             if (!$authz->isAdmin()) {
                 return "<p>Accès refusé : vous n'avez pas les droits nécessaires pour accéder à cette page.</p>";
             }
-
         } catch (\Exception $e) {
             return "<p>Erreur : " . $e->getMessage() . "</p>";
         }
@@ -26,19 +26,7 @@ class AddSpectacleAction extends Action {
 
         // Traitement du formulaire d'ajout de spectacle
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['nomSpec'], $_POST['style'], $_POST['duree'], $_POST['description'], $_POST['artistes'], $_POST['soiree'])) {
-            $nomSpec = htmlspecialchars($_POST['nomSpec']);
-            $id_style = (int)$_POST['style'];
-            $duree = (int)$_POST['duree'];
-            $description = htmlspecialchars($_POST['description']);
-            $artistes = array_map('trim', explode(',', $_POST['artistes'])); // Liste d'artistes séparés par des virgules
-            $soireeId = (int)$_POST['soiree'];
-
-            try {
-                $spectacleId = $repo->createSpectacle($nomSpec, $id_style, $duree, $description, $artistes, $soireeId);
-                return "<p>Spectacle ajouté avec succès ! <a href='?action=displaySpectacleDetail&id_spectacle={$spectacleId}'>Voir le spectacle</a></p>";
-            } catch (\PDOException $e) {
-                return "<p>Erreur lors de l'ajout du spectacle : " . $e->getMessage() . "</p>";
-            }
+            return $this->addSpectacle($repo);
         }
 
         // Récupérer les soirées disponibles
@@ -92,5 +80,21 @@ class AddSpectacleAction extends Action {
         </form>';
 
         return $form;
+    }
+
+    private function addSpectacle(NRVRepository $repo): string {
+        $nomSpec = htmlspecialchars($_POST['nomSpec']);
+        $id_style = (int)$_POST['style'];
+        $duree = (int)$_POST['duree'];
+        $description = htmlspecialchars($_POST['description']);
+        $artistes = array_map('trim', explode(',', $_POST['artistes'])); // Liste d'artistes séparés par des virgules
+        $soireeId = (int)$_POST['soiree'];
+
+        try {
+            $spectacleId = $repo->createSpectacle($nomSpec, $id_style, $duree, $description, $artistes, $soireeId);
+            return "<p class='alert alert-success'>Spectacle ajouté avec succès ! <a href='?action=displaySpectacleDetail&id_spectacle={$spectacleId}'>Voir le spectacle</a></p>";
+        } catch (\PDOException $e) {
+            return "<p class='alert alert-danger'>Erreur lors de l'ajout du spectacle : " . $e->getMessage() . "</p>";
+        }
     }
 }
