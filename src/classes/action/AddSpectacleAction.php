@@ -91,14 +91,14 @@ class AddSpectacleAction extends Action {
     }
 
     private function addSpectacle(NRVRepository $repo): string {
-        $nomSpec = htmlspecialchars($_POST['nomSpec']);
+        $nomSpec = filter_var(htmlspecialchars($_POST['nomSpec']), FILTER_SANITIZE_SPECIAL_CHARS);
         $id_style = (int)$_POST['style'];
-        $duree = (int)$_POST['duree'];
+        $duree = filter_var($_POST['duree'], FILTER_VALIDATE_INT);
         $soireeId = (int)$_POST['soiree'];
         $artistes = $_POST['artistes'] ?? []; // Artistes existants
 
         // Gestion du nouvel artiste
-        $newArtiste = trim($_POST['newArtiste'] ?? '');
+        $newArtiste = filter_var(htmlspecialchars(trim($_POST['newArtiste'] ?? ''),FILTER_SANITIZE_SPECIAL_CHARS))  ;
         if (!empty($newArtiste)) {
             try {
                 $newArtisteId = $repo->createArtiste($newArtiste); // Ajout à la base de données
