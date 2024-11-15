@@ -374,5 +374,16 @@ class NRVRepository {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     
+    public function isSpectacleLiked(int $userId, int $spectacleId): bool {
+        $stmt = $this->pdo->prepare(
+            "SELECT COUNT(*) FROM user2spectacleLike 
+            WHERE id_user = :user_id AND id_spectacle = :spectacle_id"
+        );
+        $stmt->execute([
+            'user_id' => $userId,
+            'spectacle_id' => $spectacleId
+        ]);
+        return $stmt->fetchColumn() > 0;
+    }
     
 }
