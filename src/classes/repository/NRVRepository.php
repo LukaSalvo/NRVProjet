@@ -414,15 +414,16 @@ class NRVRepository {
 
     public function getSpectaclesBySoireeId(int $id_soiree): array {
         $stmt = $this->pdo->prepare("
-            SELECT s.nomSpec, s.duree, st.nom_style 
-            FROM soiree2spectacle ss
-            JOIN spectacle s ON ss.id_spectacle = s.id_spectacle
+            SELECT s.id_spectacle, s.nomSpec, st.nom_style, s.duree
+            FROM spectacle s
             JOIN style st ON s.id_style = st.id_style
+            JOIN soiree2spectacle ss ON ss.id_spectacle = s.id_spectacle
             WHERE ss.id_soiree = :id_soiree
         ");
         $stmt->execute([':id_soiree' => $id_soiree]);
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
+    
 
     public function getArtistes(): array {
         $stmt = $this->pdo->prepare("SELECT id_artiste, nom_artiste FROM artiste");

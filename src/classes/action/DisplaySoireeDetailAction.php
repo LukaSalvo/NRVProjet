@@ -35,12 +35,18 @@ class DisplaySoireeDetailAction extends Action {
         } else {
             $output .= '<ul class="space-y-4">';
             foreach ($spectacles as $spectacle) {
-                $output .= '
-                    <li class="bg-gray-100 p-4 rounded-lg shadow hover:bg-gray-200 transition">
-                        <h4 class="text-xl font-semibold text-gray-800">' . htmlspecialchars($spectacle['nomSpec']) . '</h4>
-                        <p class="text-gray-700"><strong>Style:</strong> ' . htmlspecialchars($spectacle['nom_style']) . '</p>
-                        <p class="text-gray-700"><strong>Durée:</strong> ' . htmlspecialchars($spectacle['duree']) . ' minutes</p>
-                    </li>';
+                if (isset($spectacle['id_spectacle'], $spectacle['nomSpec'], $spectacle['nom_style'], $spectacle['duree'])) {
+                    $output .= '
+                        <li class="bg-gray-100 p-4 rounded-lg shadow hover:bg-gray-200 transition">
+                            <a href="?action=displaySpectacleDetail&id_spectacle=' . htmlspecialchars($spectacle['id_spectacle']) . '" class="block text-gray-800 hover:text-indigo-600">
+                                <h4 class="text-xl font-semibold">' . htmlspecialchars($spectacle['nomSpec']) . '</h4>
+                                <p class="text-gray-700"><strong>Style:</strong> ' . htmlspecialchars($spectacle['nom_style']) . '</p>
+                                <p class="text-gray-700"><strong>Durée:</strong> ' . htmlspecialchars($spectacle['duree']) . ' minutes</p>
+                            </a>
+                        </li>';
+                } else {
+                    $output .= '<li class="text-red-500">Données invalides pour ce spectacle.</li>';
+                }
             }
             $output .= '</ul>';
         }
