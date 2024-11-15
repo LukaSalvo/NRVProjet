@@ -66,16 +66,18 @@ class NRVRepository {
         return $result ? $result['role'] : null;
     }
 
-    public function getSoireeById(int $id): ?array {
+    public function getSoireeById(int $id_soiree): ?array {
         $stmt = $this->pdo->prepare("
-            SELECT soiree.id_soiree, soiree.nom_soiree, soiree.date, soiree.annuler, lieu.nom_lieu, lieu.nb_place, lieu.adresse, lieu.code_postal
-            FROM soiree 
-            JOIN lieu ON soiree.id_lieu = lieu.id_lieu 
-            WHERE soiree.id_soiree = :id
+            SELECT s.id_soiree, s.nom_soiree, s.id_lieu, s.date, s.annuler, l.nom_lieu
+            FROM soiree s
+            INNER JOIN lieu l ON s.id_lieu = l.id_lieu
+            WHERE s.id_soiree = :id_soiree
         ");
-        $stmt->execute(['id' => $id]);
-        return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
+        $stmt->execute([':id_soiree' => $id_soiree]);
+        $soiree = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $soiree ?: null;
     }
+    
     
     
     public function getAllSoirees(): array {
@@ -334,23 +336,21 @@ class NRVRepository {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function updateSoiree(int $id, string $nom, string $date, string $lieu, int $nb_place, string $adresse, string $code_postal): bool {
+    public function updateSoiree(int $id_soiree, string $nom_soiree, int $id_lieu, string $date, int $annuler): void {
         $stmt = $this->pdo->prepare("
-            UPDATE soiree
-            JOIN lieu ON soiree.id_lieu = lieu.id_lieu
-            SET soiree.nom_soiree = :nom, soiree.date = :date, lieu.nom_lieu = :lieu, lieu.nb_place = :nb_place, lieu.adresse = :adresse, lieu.code_postal = :code_postal
-            WHERE soiree.id_soiree = :id
+            UPDATE soiree 
+            SET nom_soiree = :nom_soiree, id_lieu = :id_lieu, date = :date, annuler = :annuler 
+            WHERE id_soiree = :id_soiree
         ");
-        return $stmt->execute([
-            'id' => $id,
-            'nom' => $nom,
-            'date' => $date,
-            'lieu' => $lieu,
-            'nb_place' => $nb_place,
-            'adresse' => $adresse,
-            'code_postal' => $code_postal
+        $stmt->execute([
+            ':nom_soiree' => $nom_soiree,
+            ':id_lieu' => $id_lieu,
+            ':date' => $date,
+            ':annuler' => $annuler,
+            ':id_soiree' => $id_soiree,
         ]);
     }
+    
     
 
 
