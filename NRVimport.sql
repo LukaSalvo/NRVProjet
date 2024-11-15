@@ -87,6 +87,16 @@ Create table `user2spectacleLike`(
     FOREIGN KEY (`id_user`) REFERENCES `user`(`id_user`),
     FOREIGN KEY (`id_spectacle`) REFERENCES `spectacle`(`id_spectacle`)
     );
+DROP TABLE IF EXISTS `images`;	
+CREATE TABLE `images` (
+    `id_image` INT AUTO_INCREMENT PRIMARY KEY,
+    `spectacle_id` INT NOT NULL,
+    `image_path` VARCHAR(255) NOT NULL,
+    `alt_text` VARCHAR(255) DEFAULT NULL,
+    `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (`spectacle_id`) REFERENCES `spectacle`(`id_spectacle`) ON DELETE CASCADE
+);
+
 
 
 

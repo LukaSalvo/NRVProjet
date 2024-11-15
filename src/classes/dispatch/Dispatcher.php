@@ -126,10 +126,11 @@ class Dispatcher {
                         <a href="?action=filterByDate" class="hover:text-yellow-300 transition duration-300">Par Date</a>
                         <a href="?action=filterByStyle" class="hover:text-yellow-300 transition duration-300">Par Style</a>
                         <a href="?action=filterByLocation" class="hover:text-yellow-300 transition duration-300">Par Localisation</a>
-                        <a href="?action=mes-favoris" class="hover:text-yellow-300 transition duration-300">Mes Préférences</a>';
+                        ';
     
         if ($user !== null) {
             $output .= '
+                        <a href="?action=mes-favoris" class="hover:text-yellow-300 transition duration-300">Mes Préférences</a>
                         <a href="?action=logout" class="hover:text-yellow-300 transition duration-300">Se Déconnecter</a>';
     
             if ($isAdmin) {

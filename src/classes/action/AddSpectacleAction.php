@@ -48,7 +48,7 @@ class AddSpectacleAction extends Action {
                 <div class="mb-4">
                     <label for="style" class="block text-gray-700">Style :</label>
                     <select id="style" name="style" class="w-full border border-gray-300 p-2 rounded" required>
-                        <option value="">Sélectionnez un style</option>';
+                        <option value="" disabled selected>Sélectionnez un style</option>';
                         foreach ($styles as $style) {
                             $form .= '<option value="' . $style['id_style'] . '">' . htmlspecialchars($style['nom_style']) . '</option>';
                         }
@@ -62,7 +62,7 @@ class AddSpectacleAction extends Action {
                 <div class="mb-4">
                     <label for="artistes" class="block text-gray-700">Artistes existants :</label>
                     <select id="artistes" name="artistes[]" class="w-full border border-gray-300 p-2 rounded" multiple>
-                        <option value="">Sélectionnez un ou plusieurs artistes</option>';
+                        <option value="" disabled selected>Sélectionnez un ou plusieurs artistes</option>';
                         foreach ($artistes as $artiste) {
                             $form .= '<option value="' . $artiste['id_artiste'] . '">' . htmlspecialchars($artiste['nom_artiste']) . '</option>';
                         }
@@ -91,12 +91,30 @@ class AddSpectacleAction extends Action {
     }
 
     private function addSpectacle(NRVRepository $repo): string {
-        $nomSpec = htmlspecialchars($_POST['nomSpec']);
+        $nomSpec = filter_var(htmlspecialchars($_POST['nomSpec']),FILTER_SANITIZE_SPECIAL_CHARS);
         $id_style = (int)$_POST['style'];
+<<<<<<< HEAD
         $duree = (int)$_POST['duree'];
         $artistes = array_map('trim', $_POST['artistes']); // Liste des ID artistes sélectionnés
         $soireeId = (int)$_POST['soiree'];
     
+=======
+        $soireeId = (int)$_POST['soiree'];
+        $duree = filter_var($_POST['duree'],FILTER_VALIDATE_INT);
+        $artistes = $_POST['artistes'] ?? []; // Artistes existants
+
+        // Gestion du nouvel artiste
+        $newArtiste = filter_var(htmlspecialchars(trim($_POST['newArtiste'] ?? ''),FILTER_SANITIZE_SPECIAL_CHARS))  ;
+        if (!empty($newArtiste)) {
+            try {
+                $newArtisteId = $repo->createArtiste($newArtiste); // Ajout à la base de données
+                $artistes[] = $newArtisteId; // Ajout de l'ID à la liste
+            } catch (\PDOException $e) {
+                return "<p class='text-red-500 text-center'>Erreur lors de l'ajout du nouvel artiste : " . $e->getMessage() . "</p>";
+            }
+        }
+
+>>>>>>> 9f8b9ce0ef788337b17b44fe19c83e876aee6cc3
         try {
             $spectacleId = $repo->createSpectacle($nomSpec, $id_style, $duree, $artistes, $soireeId);
             return "<p class='text-green-500 text-center'>Spectacle ajouté avec succès ! <a href='?action=displaySpectacleDetail&id_spectacle={$spectacleId}' class='text-blue-500 underline'>Voir le spectacle</a></p>";
